@@ -22,7 +22,7 @@ import pandas as pd
 from scipy import stats
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from config.experiment_config import RESULTS_DIR, WVS_COUNTRIES, PRIVACY_COUNTRIES
+from config.experiment_config import RESULTS_DIR, WVS_COUNTRIES, BF_COUNTRIES, PRIVACY_COUNTRIES
 
 logger = logging.getLogger(__name__)
 
@@ -94,7 +94,7 @@ def per_country_analysis(df: pd.DataFrame) -> list[dict]:
     di_cols = ["DI_combined", "DI_SCS", "DI_VCR", "DI_ICE"]
 
     results = []
-    all_countries = WVS_COUNTRIES + PRIVACY_COUNTRIES
+    all_countries = WVS_COUNTRIES + BF_COUNTRIES + PRIVACY_COUNTRIES
     for country in all_countries:
         cdf = df[df["country"] == country].copy()
         if len(cdf) < 2:

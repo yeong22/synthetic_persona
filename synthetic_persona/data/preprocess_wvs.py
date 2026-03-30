@@ -16,7 +16,7 @@ import pandas as pd
 # Paths
 # ---------------------------------------------------------------------------
 DATA_DIR = Path(__file__).resolve().parent
-WVS_CSV = DATA_DIR / "wvs" / "WVS_Cross-National_Wave_7_inverted_csv_v6_0.csv"
+WVS_CSV = DATA_DIR / "wvs_raw" / "WVS_Cross-National_Wave_7_inverted_csv_v6_0.csv"
 OUT_DIR = DATA_DIR / "wvs_gt"
 OUT_DIR.mkdir(exist_ok=True)
 
@@ -125,8 +125,8 @@ def main():
     print("Scale comparison: actual data vs experiment_config.py")
     print("=" * 70)
     config_scales = {
-        "Q45": (1, 4), "Q46": (1, 4), "Q57": (1, 2),
-        "Q184": (1, 10), "Q218": (1, 10), "Q254": (1, 5),
+        "Q45": (1, 3), "Q46": (1, 4), "Q57": (1, 2),
+        "Q184": (1, 10), "Q218": (1, 3), "Q254": (1, 5),
     }
     for q in q_cols:
         series = df[q].dropna()

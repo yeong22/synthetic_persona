@@ -27,12 +27,14 @@ from scipy.spatial.distance import jensenshannon
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from config.experiment_config import (
     DATA_DIR, RESULTS_DIR, WVS_COUNTRIES, WVS_ITEMS,
+    BF_COUNTRIES, BF_ITEMS,
     PRIVACY_COUNTRIES, PRIVACY_ITEMS, PROMPTING_METHODS,
 )
 
 logger = logging.getLogger(__name__)
 
 WVS_GT_DIST_PATH = DATA_DIR / "wvs_gt" / "distributions.json"
+BF_GT_DIST_PATH = DATA_DIR / "bigfive_gt" / "distributions.json"
 PRIVACY_GT_DIST_PATH = DATA_DIR / "privacy_gt" / "distributions.json"
 
 
@@ -216,6 +218,10 @@ def run_step_a() -> list[dict]:
 
     # WVS
     results.extend(_run_domain("wvs", WVS_COUNTRIES, WVS_ITEMS, WVS_GT_DIST_PATH))
+
+    # Big Five
+    if BF_GT_DIST_PATH.exists():
+        results.extend(_run_domain("bigfive", BF_COUNTRIES, BF_ITEMS, BF_GT_DIST_PATH))
 
     # Privacy
     if PRIVACY_GT_DIST_PATH.exists():

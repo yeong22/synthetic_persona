@@ -29,7 +29,7 @@ SIG_THRESHOLD = 0.05
 
 
 def _item_columns(df: pd.DataFrame) -> list[str]:
-    return [c for c in df.columns if c.startswith(("Q", "PC"))]
+    return [c for c in df.columns if c.startswith(("Q", "PC", "EXT", "EST", "AGR", "CSN", "OPN"))]
 
 
 def _corr_with_pvalue(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:

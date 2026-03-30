@@ -14,7 +14,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from config.experiment_config import (
     RESULTS_DIR, DATA_DIR,
-    WVS_COUNTRIES, PRIVACY_COUNTRIES, PROMPTING_METHODS,
+    WVS_COUNTRIES, BF_COUNTRIES, PRIVACY_COUNTRIES, PROMPTING_METHODS,
 )
 from metrics.step_b_structural import compute_sfs
 
@@ -39,6 +39,31 @@ def run_step_b() -> list[dict]:
             syn_df = pd.read_csv(syn_csv)
             m = compute_sfs(syn_df, real_df)
             m["domain"] = "wvs"
+            m["country"] = country
+            m["method"] = method
+            all_metrics.append(m)
+            logger.info("%s / %-15s  SignF=%.4f  SigF=%.4f  NullF=%.4f  SFS=%.4f",
+                        country, method,
+                        m.get("SignF", float("nan")),
+                        m.get("SigF", float("nan")),
+                        m.get("NullF", float("nan")),
+                        m.get("SFS", float("nan")))
+
+    # Big Five conditions
+    for country in BF_COUNTRIES:
+        real_csv = DATA_DIR / "bigfive_gt" / f"{country}.csv"
+        if not real_csv.exists():
+            logger.warning("No GT CSV for %s, skipping", country)
+            continue
+        real_df = pd.read_csv(real_csv)
+
+        for method in PROMPTING_METHODS:
+            syn_csv = RESULTS_DIR / "bigfive" / country / f"{method}.csv"
+            if not syn_csv.exists():
+                continue
+            syn_df = pd.read_csv(syn_csv)
+            m = compute_sfs(syn_df, real_df)
+            m["domain"] = "bigfive"
             m["country"] = country
             m["method"] = method
             all_metrics.append(m)

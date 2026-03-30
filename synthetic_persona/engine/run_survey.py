@@ -84,7 +84,7 @@ def save_results(df: pd.DataFrame, cond: ExperimentCondition):
 
 def run_domain(domain: str):
     """Run all conditions for a specific domain."""
-    conditions = [c for c in get_all_conditions() if c.domain == domain]
+    conditions = get_all_conditions(domain=domain)
 
     # Skip already-completed conditions (resume support)
     remaining = []
@@ -117,7 +117,7 @@ def run_domain(domain: str):
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
     parser = argparse.ArgumentParser(description="Run synthetic persona survey simulation")
-    parser.add_argument("--domain", required=True, choices=["wvs", "privacy"],
+    parser.add_argument("--domain", required=True, choices=["wvs", "bigfive", "privacy"],
                         help="Domain to run")
     args = parser.parse_args()
     run_domain(args.domain)

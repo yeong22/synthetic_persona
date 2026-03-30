@@ -2,64 +2,121 @@
   "per_country": [
     {
       "country": "Argentina",
-      "n_methods": 3,
+      "n_methods": 6,
       "method_ranks": [
         {
           "method": "cultural",
-          "WD_mean_rank": 3,
-          "WD_mean": 1.6399,
+          "WD_mean_rank": 5,
+          "WD_mean": 1.1422,
           "JSD_mean_rank": 3,
-          "JSD_mean": 0.4333,
+          "JSD_mean": 0.2518,
           "KS_mean_rank": 3,
-          "KS_mean": 0.7541,
-          "MeanDiff_mean_rank": 3,
-          "MeanDiff_mean": 1.5611,
-          "DI_combined_rank": 2,
-          "DI_combined": 0.3235,
-          "DI_SCS_rank": 1,
-          "DI_SCS": 0.6756,
+          "KS_mean": 0.5098,
+          "MeanDiff_mean_rank": 6,
+          "MeanDiff_mean": 0.9958,
+          "DI_combined_rank": 5,
+          "DI_combined": 0.4635,
+          "DI_SCS_rank": 3,
+          "DI_SCS": 0.41,
           "DI_VCR_rank": 1,
           "DI_VCR": 0.0,
-          "DI_ICE_rank": 2,
-          "DI_ICE": -0.4439
+          "DI_ICE_rank": 6,
+          "DI_ICE": -0.3149
         },
         {
           "method": "opencharacter",
-          "WD_mean_rank": 2,
-          "WD_mean": 1.0382,
-          "JSD_mean_rank": 2,
-          "JSD_mean": 0.2723,
-          "KS_mean_rank": 2,
-          "KS_mean": 0.5316,
+          "WD_mean_rank": 3,
+          "WD_mean": 0.9292,
+          "JSD_mean_rank": 4,
+          "JSD_mean": 0.2812,
+          "KS_mean_rank": 6,
+          "KS_mean": 0.5497,
           "MeanDiff_mean_rank": 2,
-          "MeanDiff_mean": 0.9288,
-          "DI_combined_rank": 3,
-          "DI_combined": 0.4515,
-          "DI_SCS_rank": 3,
-          "DI_SCS": 1.0538,
+          "MeanDiff_mean": 0.7585,
+          "DI_combined_rank": 2,
+          "DI_combined": 0.196,
+          "DI_SCS_rank": 2,
+          "DI_SCS": 0.2899,
           "DI_VCR_rank": 1,
           "DI_VCR": 0.0,
           "DI_ICE_rank": 3,
-          "DI_ICE": -0.4147
+          "DI_ICE": -0.5661
         },
         {
           "method": "deep_persona",
           "WD_mean_rank": 1,
-          "WD_mean": 0.6451,
+          "WD_mean": 0.574,
           "JSD_mean_rank": 1,
-          "JSD_mean": 0.1917,
-          "KS_mean_rank": 1,
-          "KS_mean": 0.4498,
+          "JSD_mean": 0.1612,
+          "KS_mean_rank": 2,
+          "KS_mean": 0.3822,
           "MeanDiff_mean_rank": 1,
-          "MeanDiff_mean": 0.578,
+          "MeanDiff_mean": 0.4311,
+          "DI_combined_rank": 3,
+          "DI_combined": 0.3305,
+          "DI_SCS_rank": 5,
+          "DI_SCS": 0.5726,
+          "DI_VCR_rank": 1,
+          "DI_VCR": 0.0,
+          "DI_ICE_rank": 2,
+          "DI_ICE": -0.5838
+        },
+        {
+          "method": "cultural",
+          "WD_mean_rank": 6,
+          "WD_mean": 1.1809,
+          "JSD_mean_rank": 6,
+          "JSD_mean": 0.3381,
+          "KS_mean_rank": 5,
+          "KS_mean": 0.5458,
+          "MeanDiff_mean_rank": 5,
+          "MeanDiff_mean": 0.8523,
+          "DI_combined_rank": 6,
+          "DI_combined": 0.5114,
+          "DI_SCS_rank": 6,
+          "DI_SCS": 0.6398,
+          "DI_VCR_rank": 1,
+          "DI_VCR": 0.0,
+          "DI_ICE_rank": 5,
+          "DI_ICE": -0.4049
+        },
+        {
+          "method": "opencharacter",
+          "WD_mean_rank": 4,
+          "WD_mean": 1.1222,
+          "JSD_mean_rank": 5,
+          "JSD_mean": 0.3079,
+          "KS_mean_rank": 4,
+          "KS_mean": 0.5118,
+          "MeanDiff_mean_rank": 4,
+          "MeanDiff_mean": 0.8068,
+          "DI_combined_rank": 4,
+          "DI_combined": 0.4626,
+          "DI_SCS_rank": 4,
+          "DI_SCS": 0.5595,
+          "DI_VCR_rank": 1,
+          "DI_VCR": 0.0,
+          "DI_ICE_rank": 4,
+          "DI_ICE": -0.4129
+        },
+        {
+          "method": "deep_persona",
+          "WD_mean_rank": 2,
+          "WD_mean": 0.9086,
+          "JSD_mean_rank": 2,
+          "JSD_mean": 0.1635,
+          "KS_mean_rank": 1,
+          "KS_mean": 0.3777,
+          "MeanDiff_mean_rank": 3,
+          "MeanDiff_mean": 0.7843,
           "DI_combined_rank": 1,
-          "DI_combined": 0.2451,
-          "DI_SCS_rank": 2,
-          "DI_SCS": 0.9074,
+          "DI_combined": 0.0722,
+          "DI_SCS_rank": 1,
+          "DI_SCS": 0.2534,
           "DI_VCR_rank": 1,
           "DI_VCR": 0.0,
           "DI_ICE_rank": 1,
-          "DI_ICE": -0.6298
+          "DI_ICE": -0.6946
         }
       ],
       "concordances": {
@@ -115,69 +172,126 @@
     },
     {
       "country": "Australia",
-      "n_methods": 3,
+      "n_methods": 6,
       "method_ranks": [
         {
           "method": "cultural",
-          "WD_mean_rank": 3,
-          "WD_mean": 1.33,
-          "JSD_mean_rank": 3,
-          "JSD_mean": 0.3751,
-          "KS_mean_rank": 3,
-          "KS_mean": 0.6216,
+          "WD_mean_rank": 5,
+          "WD_mean": 1.1975,
+          "JSD_mean_rank": 5,
+          "JSD_mean": 0.3243,
+          "KS_mean_rank": 6,
+          "KS_mean": 0.5715,
           "MeanDiff_mean_rank": 3,
-          "MeanDiff_mean": 0.9968,
-          "DI_combined_rank": 3,
-          "DI_combined": 0.4864,
-          "DI_SCS_rank": 1,
-          "DI_SCS": 0.6213,
+          "MeanDiff_mean": 0.8273,
+          "DI_combined_rank": 4,
+          "DI_combined": 0.4107,
+          "DI_SCS_rank": 2,
+          "DI_SCS": 0.3449,
           "DI_VCR_rank": 1,
           "DI_VCR": 0.0,
-          "DI_ICE_rank": 3,
-          "DI_ICE": -0.2125
+          "DI_ICE_rank": 6,
+          "DI_ICE": -0.3376
         },
         {
           "method": "opencharacter",
           "WD_mean_rank": 2,
-          "WD_mean": 0.8867,
-          "JSD_mean_rank": 2,
-          "JSD_mean": 0.2486,
-          "KS_mean_rank": 2,
-          "KS_mean": 0.4171,
+          "WD_mean": 0.8875,
+          "JSD_mean_rank": 3,
+          "JSD_mean": 0.2499,
+          "KS_mean_rank": 3,
+          "KS_mean": 0.4737,
           "MeanDiff_mean_rank": 1,
-          "MeanDiff_mean": 0.488,
+          "MeanDiff_mean": 0.5392,
           "DI_combined_rank": 2,
-          "DI_combined": 0.3824,
-          "DI_SCS_rank": 3,
-          "DI_SCS": 1.1752,
+          "DI_combined": 0.2402,
+          "DI_SCS_rank": 1,
+          "DI_SCS": 0.1866,
           "DI_VCR_rank": 1,
           "DI_VCR": 0.0,
-          "DI_ICE_rank": 2,
-          "DI_ICE": -0.5486
+          "DI_ICE_rank": 3,
+          "DI_ICE": -0.4447
         },
         {
           "method": "deep_persona",
           "WD_mean_rank": 1,
-          "WD_mean": 0.8048,
+          "WD_mean": 0.814,
           "JSD_mean_rank": 1,
-          "JSD_mean": 0.1614,
+          "JSD_mean": 0.1314,
           "KS_mean_rank": 1,
-          "KS_mean": 0.4069,
+          "KS_mean": 0.341,
           "MeanDiff_mean_rank": 2,
-          "MeanDiff_mean": 0.7834,
+          "MeanDiff_mean": 0.7564,
+          "DI_combined_rank": 3,
+          "DI_combined": 0.3206,
+          "DI_SCS_rank": 5,
+          "DI_SCS": 0.6288,
+          "DI_VCR_rank": 1,
+          "DI_VCR": 0.0,
+          "DI_ICE_rank": 2,
+          "DI_ICE": -0.6323
+        },
+        {
+          "method": "cultural",
+          "WD_mean_rank": 6,
+          "WD_mean": 1.2041,
+          "JSD_mean_rank": 6,
+          "JSD_mean": 0.3348,
+          "KS_mean_rank": 5,
+          "KS_mean": 0.5443,
+          "MeanDiff_mean_rank": 6,
+          "MeanDiff_mean": 0.8915,
+          "DI_combined_rank": 6,
+          "DI_combined": 0.529,
+          "DI_SCS_rank": 6,
+          "DI_SCS": 0.6399,
+          "DI_VCR_rank": 1,
+          "DI_VCR": 0.0,
+          "DI_ICE_rank": 5,
+          "DI_ICE": -0.3833
+        },
+        {
+          "method": "opencharacter",
+          "WD_mean_rank": 4,
+          "WD_mean": 1.1453,
+          "JSD_mean_rank": 4,
+          "JSD_mean": 0.3053,
+          "KS_mean_rank": 4,
+          "KS_mean": 0.5121,
+          "MeanDiff_mean_rank": 4,
+          "MeanDiff_mean": 0.8574,
+          "DI_combined_rank": 5,
+          "DI_combined": 0.4752,
+          "DI_SCS_rank": 4,
+          "DI_SCS": 0.6267,
+          "DI_VCR_rank": 1,
+          "DI_VCR": 0.0,
+          "DI_ICE_rank": 4,
+          "DI_ICE": -0.441
+        },
+        {
+          "method": "deep_persona",
+          "WD_mean_rank": 3,
+          "WD_mean": 0.9602,
+          "JSD_mean_rank": 2,
+          "JSD_mean": 0.1615,
+          "KS_mean_rank": 2,
+          "KS_mean": 0.403,
+          "MeanDiff_mean_rank": 5,
+          "MeanDiff_mean": 0.8701,
           "DI_combined_rank": 1,
-          "DI_combined": 0.2726,
-          "DI_SCS_rank": 2,
-          "DI_SCS": 1.0491,
+          "DI_combined": 0.1274,
+          "DI_SCS_rank": 3,
+          "DI_SCS": 0.3733,
           "DI_VCR_rank": 1,
           "DI_VCR": 0.0,
           "DI_ICE_rank": 1,
-          "DI_ICE": -0.6455
+          "DI_ICE": -0.7044
         }
       ],
       "concordances": {
         "DI_combined_vs_WD_mean": {
-          "rank_match": true
+          "rank_match": false
         },
         "DI_SCS_vs_WD_mean": {
           "rank_match": false
@@ -186,10 +300,10 @@
           "rank_match": false
         },
         "DI_ICE_vs_WD_mean": {
-          "rank_match": true
+          "rank_match": false
         },
         "DI_combined_vs_JSD_mean": {
-          "rank_match": true
+          "rank_match": false
         },
         "DI_SCS_vs_JSD_mean": {
           "rank_match": false
@@ -198,10 +312,10 @@
           "rank_match": false
         },
         "DI_ICE_vs_JSD_mean": {
-          "rank_match": true
+          "rank_match": false
         },
         "DI_combined_vs_KS_mean": {
-          "rank_match": true
+          "rank_match": false
         },
         "DI_SCS_vs_KS_mean": {
           "rank_match": false
@@ -210,7 +324,7 @@
           "rank_match": false
         },
         "DI_ICE_vs_KS_mean": {
-          "rank_match": true
+          "rank_match": false
         },
         "DI_combined_vs_MeanDiff_mean": {
           "rank_match": false
@@ -233,64 +347,64 @@
         {
           "method": "cultural",
           "WD_mean_rank": 3,
-          "WD_mean": 1.372,
-          "JSD_mean_rank": 3,
-          "JSD_mean": 0.3809,
+          "WD_mean": 0.8181,
+          "JSD_mean_rank": 2,
+          "JSD_mean": 0.2023,
           "KS_mean_rank": 3,
-          "KS_mean": 0.6664,
+          "KS_mean": 0.3976,
           "MeanDiff_mean_rank": 3,
-          "MeanDiff_mean": 1.1445,
+          "MeanDiff_mean": 0.4994,
           "DI_combined_rank": 3,
-          "DI_combined": 0.5325,
-          "DI_SCS_rank": 1,
-          "DI_SCS": 0.7862,
+          "DI_combined": 0.3779,
+          "DI_SCS_rank": 2,
+          "DI_SCS": 0.4385,
           "DI_VCR_rank": 1,
           "DI_VCR": 0.0,
           "DI_ICE_rank": 3,
-          "DI_ICE": -0.2125
+          "DI_ICE": -0.4386
         },
         {
           "method": "opencharacter",
           "WD_mean_rank": 2,
-          "WD_mean": 0.8701,
-          "JSD_mean_rank": 2,
-          "JSD_mean": 0.2434,
+          "WD_mean": 0.7843,
+          "JSD_mean_rank": 3,
+          "JSD_mean": 0.2282,
           "KS_mean_rank": 2,
-          "KS_mean": 0.4328,
-          "MeanDiff_mean_rank": 2,
-          "MeanDiff_mean": 0.5889,
-          "DI_combined_rank": 2,
-          "DI_combined": 0.4926,
-          "DI_SCS_rank": 3,
-          "DI_SCS": 1.2667,
+          "KS_mean": 0.388,
+          "MeanDiff_mean_rank": 1,
+          "MeanDiff_mean": 0.3416,
+          "DI_combined_rank": 1,
+          "DI_combined": 0.2672,
+          "DI_SCS_rank": 1,
+          "DI_SCS": 0.3807,
           "DI_VCR_rank": 1,
           "DI_VCR": 0.0,
           "DI_ICE_rank": 2,
-          "DI_ICE": -0.4386
+          "DI_ICE": -0.5372
         },
         {
           "method": "deep_persona",
           "WD_mean_rank": 1,
-          "WD_mean": 0.6377,
+          "WD_mean": 0.5665,
           "JSD_mean_rank": 1,
-          "JSD_mean": 0.1723,
+          "JSD_mean": 0.1126,
           "KS_mean_rank": 1,
-          "KS_mean": 0.3829,
-          "MeanDiff_mean_rank": 1,
-          "MeanDiff_mean": 0.5363,
-          "DI_combined_rank": 1,
-          "DI_combined": 0.3704,
-          "DI_SCS_rank": 2,
-          "DI_SCS": 1.1805,
+          "KS_mean": 0.2916,
+          "MeanDiff_mean_rank": 2,
+          "MeanDiff_mean": 0.4848,
+          "DI_combined_rank": 2,
+          "DI_combined": 0.3334,
+          "DI_SCS_rank": 3,
+          "DI_SCS": 0.6734,
           "DI_VCR_rank": 1,
           "DI_VCR": 0.0,
           "DI_ICE_rank": 1,
-          "DI_ICE": -0.5661
+          "DI_ICE": -0.6455
         }
       ],
       "concordances": {
         "DI_combined_vs_WD_mean": {
-          "rank_match": true
+          "rank_match": false
         },
         "DI_SCS_vs_WD_mean": {
           "rank_match": false
@@ -302,7 +416,7 @@
           "rank_match": true
         },
         "DI_combined_vs_JSD_mean": {
-          "rank_match": true
+          "rank_match": false
         },
         "DI_SCS_vs_JSD_mean": {
           "rank_match": false
@@ -311,10 +425,10 @@
           "rank_match": false
         },
         "DI_ICE_vs_JSD_mean": {
-          "rank_match": true
+          "rank_match": false
         },
         "DI_combined_vs_KS_mean": {
-          "rank_match": true
+          "rank_match": false
         },
         "DI_SCS_vs_KS_mean": {
           "rank_match": false
@@ -335,75 +449,132 @@
           "rank_match": false
         },
         "DI_ICE_vs_MeanDiff_mean": {
-          "rank_match": true
+          "rank_match": false
         }
       }
     },
     {
       "country": "India",
-      "n_methods": 3,
+      "n_methods": 6,
       "method_ranks": [
         {
           "method": "cultural",
-          "WD_mean_rank": 3,
-          "WD_mean": 1.709,
-          "JSD_mean_rank": 3,
-          "JSD_mean": 0.4198,
-          "KS_mean_rank": 3,
-          "KS_mean": 0.7428,
-          "MeanDiff_mean_rank": 3,
-          "MeanDiff_mean": 1.6734,
+          "WD_mean_rank": 6,
+          "WD_mean": 1.3847,
+          "JSD_mean_rank": 5,
+          "JSD_mean": 0.3311,
+          "KS_mean_rank": 6,
+          "KS_mean": 0.619,
+          "MeanDiff_mean_rank": 6,
+          "MeanDiff_mean": 1.2615,
           "DI_combined_rank": 3,
-          "DI_combined": 0.5127,
-          "DI_SCS_rank": 1,
-          "DI_SCS": 0.7156,
+          "DI_combined": 0.3942,
+          "DI_SCS_rank": 3,
+          "DI_SCS": 0.5233,
           "DI_VCR_rank": 1,
           "DI_VCR": 0.0,
           "DI_ICE_rank": 3,
-          "DI_ICE": -0.2125
+          "DI_ICE": -0.4735
         },
         {
           "method": "opencharacter",
           "WD_mean_rank": 2,
-          "WD_mean": 1.2065,
-          "JSD_mean_rank": 2,
-          "JSD_mean": 0.34,
-          "KS_mean_rank": 2,
-          "KS_mean": 0.637,
+          "WD_mean": 0.9218,
+          "JSD_mean_rank": 3,
+          "JSD_mean": 0.3085,
+          "KS_mean_rank": 5,
+          "KS_mean": 0.5799,
           "MeanDiff_mean_rank": 2,
-          "MeanDiff_mean": 1.0956,
-          "DI_combined_rank": 2,
-          "DI_combined": 0.3995,
-          "DI_SCS_rank": 2,
-          "DI_SCS": 0.9478,
+          "MeanDiff_mean": 0.7432,
+          "DI_combined_rank": 6,
+          "DI_combined": 0.5588,
+          "DI_SCS_rank": 6,
+          "DI_SCS": 0.7641,
           "DI_VCR_rank": 1,
           "DI_VCR": 0.0,
-          "DI_ICE_rank": 2,
-          "DI_ICE": -0.4439
+          "DI_ICE_rank": 4,
+          "DI_ICE": -0.4272
         },
         {
           "method": "deep_persona",
           "WD_mean_rank": 1,
-          "WD_mean": 0.7543,
-          "JSD_mean_rank": 1,
-          "JSD_mean": 0.18,
-          "KS_mean_rank": 1,
-          "KS_mean": 0.4461,
+          "WD_mean": 0.6643,
+          "JSD_mean_rank": 2,
+          "JSD_mean": 0.1851,
+          "KS_mean_rank": 2,
+          "KS_mean": 0.4426,
           "MeanDiff_mean_rank": 1,
-          "MeanDiff_mean": 0.7179,
+          "MeanDiff_mean": 0.6162,
+          "DI_combined_rank": 2,
+          "DI_combined": 0.3636,
+          "DI_SCS_rank": 5,
+          "DI_SCS": 0.665,
+          "DI_VCR_rank": 1,
+          "DI_VCR": 0.0,
+          "DI_ICE_rank": 2,
+          "DI_ICE": -0.603
+        },
+        {
+          "method": "cultural",
+          "WD_mean_rank": 5,
+          "WD_mean": 1.2256,
+          "JSD_mean_rank": 6,
+          "JSD_mean": 0.345,
+          "KS_mean_rank": 4,
+          "KS_mean": 0.5378,
+          "MeanDiff_mean_rank": 5,
+          "MeanDiff_mean": 0.8719,
+          "DI_combined_rank": 5,
+          "DI_combined": 0.506,
+          "DI_SCS_rank": 4,
+          "DI_SCS": 0.5952,
+          "DI_VCR_rank": 1,
+          "DI_VCR": 0.0,
+          "DI_ICE_rank": 6,
+          "DI_ICE": -0.3827
+        },
+        {
+          "method": "opencharacter",
+          "WD_mean_rank": 4,
+          "WD_mean": 1.1424,
+          "JSD_mean_rank": 4,
+          "JSD_mean": 0.3088,
+          "KS_mean_rank": 3,
+          "KS_mean": 0.4828,
+          "MeanDiff_mean_rank": 3,
+          "MeanDiff_mean": 0.7494,
+          "DI_combined_rank": 4,
+          "DI_combined": 0.4515,
+          "DI_SCS_rank": 2,
+          "DI_SCS": 0.5211,
+          "DI_VCR_rank": 1,
+          "DI_VCR": 0.0,
+          "DI_ICE_rank": 5,
+          "DI_ICE": -0.4016
+        },
+        {
+          "method": "deep_persona",
+          "WD_mean_rank": 3,
+          "WD_mean": 0.9616,
+          "JSD_mean_rank": 1,
+          "JSD_mean": 0.1651,
+          "KS_mean_rank": 1,
+          "KS_mean": 0.3841,
+          "MeanDiff_mean_rank": 4,
+          "MeanDiff_mean": 0.8315,
           "DI_combined_rank": 1,
-          "DI_combined": 0.3342,
-          "DI_SCS_rank": 3,
-          "DI_SCS": 1.1528,
+          "DI_combined": 0.0604,
+          "DI_SCS_rank": 1,
+          "DI_SCS": 0.2379,
           "DI_VCR_rank": 1,
           "DI_VCR": 0.0,
           "DI_ICE_rank": 1,
-          "DI_ICE": -0.603
+          "DI_ICE": -0.6991
         }
       ],
       "concordances": {
         "DI_combined_vs_WD_mean": {
-          "rank_match": true
+          "rank_match": false
         },
         "DI_SCS_vs_WD_mean": {
           "rank_match": false
@@ -412,10 +583,10 @@
           "rank_match": false
         },
         "DI_ICE_vs_WD_mean": {
-          "rank_match": true
+          "rank_match": false
         },
         "DI_combined_vs_JSD_mean": {
-          "rank_match": true
+          "rank_match": false
         },
         "DI_SCS_vs_JSD_mean": {
           "rank_match": false
@@ -424,10 +595,10 @@
           "rank_match": false
         },
         "DI_ICE_vs_JSD_mean": {
-          "rank_match": true
+          "rank_match": false
         },
         "DI_combined_vs_KS_mean": {
-          "rank_match": true
+          "rank_match": false
         },
         "DI_SCS_vs_KS_mean": {
           "rank_match": false
@@ -436,10 +607,10 @@
           "rank_match": false
         },
         "DI_ICE_vs_KS_mean": {
-          "rank_match": true
+          "rank_match": false
         },
         "DI_combined_vs_MeanDiff_mean": {
-          "rank_match": true
+          "rank_match": false
         },
         "DI_SCS_vs_MeanDiff_mean": {
           "rank_match": false
@@ -448,7 +619,7 @@
           "rank_match": false
         },
         "DI_ICE_vs_MeanDiff_mean": {
-          "rank_match": true
+          "rank_match": false
         }
       }
     },
@@ -459,59 +630,59 @@
         {
           "method": "cultural",
           "WD_mean_rank": 3,
-          "WD_mean": 1.4607,
+          "WD_mean": 1.2331,
           "JSD_mean_rank": 3,
-          "JSD_mean": 0.3922,
-          "KS_mean_rank": 3,
-          "KS_mean": 0.6666,
+          "JSD_mean": 0.3512,
+          "KS_mean_rank": 2,
+          "KS_mean": 0.6144,
           "MeanDiff_mean_rank": 3,
-          "MeanDiff_mean": 1.3162,
+          "MeanDiff_mean": 0.9839,
           "DI_combined_rank": 3,
-          "DI_combined": 0.5102,
+          "DI_combined": 0.4663,
           "DI_SCS_rank": 1,
-          "DI_SCS": 0.7063,
+          "DI_SCS": 0.392,
           "DI_VCR_rank": 1,
           "DI_VCR": 0.0,
           "DI_ICE_rank": 3,
-          "DI_ICE": -0.2125
+          "DI_ICE": -0.2997
         },
         {
           "method": "opencharacter",
           "WD_mean_rank": 2,
-          "WD_mean": 1.0559,
+          "WD_mean": 1.0122,
           "JSD_mean_rank": 2,
-          "JSD_mean": 0.2956,
-          "KS_mean_rank": 2,
-          "KS_mean": 0.5475,
+          "JSD_mean": 0.3388,
+          "KS_mean_rank": 3,
+          "KS_mean": 0.6178,
           "MeanDiff_mean_rank": 2,
-          "MeanDiff_mean": 0.8684,
+          "MeanDiff_mean": 0.7883,
           "DI_combined_rank": 2,
-          "DI_combined": 0.4471,
+          "DI_combined": 0.3373,
           "DI_SCS_rank": 2,
-          "DI_SCS": 0.8256,
+          "DI_SCS": 0.4598,
           "DI_VCR_rank": 1,
           "DI_VCR": 0.0,
           "DI_ICE_rank": 2,
-          "DI_ICE": -0.3376
+          "DI_ICE": -0.5023
         },
         {
           "method": "deep_persona",
           "WD_mean_rank": 1,
-          "WD_mean": 0.6852,
+          "WD_mean": 0.5844,
           "JSD_mean_rank": 1,
-          "JSD_mean": 0.1859,
+          "JSD_mean": 0.1776,
           "KS_mean_rank": 1,
-          "KS_mean": 0.4471,
+          "KS_mean": 0.4012,
           "MeanDiff_mean_rank": 1,
-          "MeanDiff_mean": 0.6057,
+          "MeanDiff_mean": 0.4199,
           "DI_combined_rank": 1,
-          "DI_combined": 0.3252,
+          "DI_combined": 0.322,
           "DI_SCS_rank": 3,
-          "DI_SCS": 1.146,
+          "DI_SCS": 0.6634,
           "DI_VCR_rank": 1,
           "DI_VCR": 0.0,
           "DI_ICE_rank": 1,
-          "DI_ICE": -0.6123
+          "DI_ICE": -0.6531
         }
       ],
       "concordances": {
@@ -540,7 +711,7 @@
           "rank_match": true
         },
         "DI_combined_vs_KS_mean": {
-          "rank_match": true
+          "rank_match": false
         },
         "DI_SCS_vs_KS_mean": {
           "rank_match": false
@@ -549,7 +720,7 @@
           "rank_match": false
         },
         "DI_ICE_vs_KS_mean": {
-          "rank_match": true
+          "rank_match": false
         },
         "DI_combined_vs_MeanDiff_mean": {
           "rank_match": true
@@ -572,64 +743,64 @@
         {
           "method": "cultural",
           "WD_mean_rank": 3,
-          "WD_mean": 1.256,
-          "JSD_mean_rank": 3,
-          "JSD_mean": 0.3379,
+          "WD_mean": 1.0285,
+          "JSD_mean_rank": 2,
+          "JSD_mean": 0.2335,
           "KS_mean_rank": 3,
-          "KS_mean": 0.6298,
+          "KS_mean": 0.4913,
           "MeanDiff_mean_rank": 3,
-          "MeanDiff_mean": 1.0864,
-          "DI_combined_rank": 3,
-          "DI_combined": 0.5112,
-          "DI_SCS_rank": 1,
-          "DI_SCS": 0.71,
+          "MeanDiff_mean": 0.8021,
+          "DI_combined_rank": 2,
+          "DI_combined": 0.3897,
+          "DI_SCS_rank": 2,
+          "DI_SCS": 0.4434,
           "DI_VCR_rank": 1,
           "DI_VCR": 0.0,
           "DI_ICE_rank": 3,
-          "DI_ICE": -0.2125
+          "DI_ICE": -0.4272
         },
         {
           "method": "opencharacter",
           "WD_mean_rank": 2,
-          "WD_mean": 0.85,
-          "JSD_mean_rank": 2,
-          "JSD_mean": 0.2291,
+          "WD_mean": 0.8659,
+          "JSD_mean_rank": 3,
+          "JSD_mean": 0.2527,
           "KS_mean_rank": 2,
-          "KS_mean": 0.4171,
-          "MeanDiff_mean_rank": 1,
-          "MeanDiff_mean": 0.5591,
-          "DI_combined_rank": 2,
-          "DI_combined": 0.3292,
-          "DI_SCS_rank": 2,
-          "DI_SCS": 0.8509,
+          "KS_mean": 0.4569,
+          "MeanDiff_mean_rank": 2,
+          "MeanDiff_mean": 0.5016,
+          "DI_combined_rank": 1,
+          "DI_combined": 0.2568,
+          "DI_SCS_rank": 1,
+          "DI_SCS": 0.307,
           "DI_VCR_rank": 1,
           "DI_VCR": 0.0,
           "DI_ICE_rank": 2,
-          "DI_ICE": -0.5
+          "DI_ICE": -0.5023
         },
         {
           "method": "deep_persona",
           "WD_mean_rank": 1,
-          "WD_mean": 0.5987,
+          "WD_mean": 0.4959,
           "JSD_mean_rank": 1,
-          "JSD_mean": 0.1492,
+          "JSD_mean": 0.1119,
           "KS_mean_rank": 1,
-          "KS_mean": 0.3983,
-          "MeanDiff_mean_rank": 2,
-          "MeanDiff_mean": 0.5641,
-          "DI_combined_rank": 1,
-          "DI_combined": 0.3059,
+          "KS_mean": 0.2842,
+          "MeanDiff_mean_rank": 1,
+          "MeanDiff_mean": 0.3831,
+          "DI_combined_rank": 3,
+          "DI_combined": 0.3954,
           "DI_SCS_rank": 3,
-          "DI_SCS": 0.9622,
+          "DI_SCS": 0.7433,
           "DI_VCR_rank": 1,
           "DI_VCR": 0.0,
           "DI_ICE_rank": 1,
-          "DI_ICE": -0.5706
+          "DI_ICE": -0.6147
         }
       ],
       "concordances": {
         "DI_combined_vs_WD_mean": {
-          "rank_match": true
+          "rank_match": false
         },
         "DI_SCS_vs_WD_mean": {
           "rank_match": false
@@ -641,7 +812,7 @@
           "rank_match": true
         },
         "DI_combined_vs_JSD_mean": {
-          "rank_match": true
+          "rank_match": false
         },
         "DI_SCS_vs_JSD_mean": {
           "rank_match": false
@@ -650,10 +821,10 @@
           "rank_match": false
         },
         "DI_ICE_vs_JSD_mean": {
-          "rank_match": true
+          "rank_match": false
         },
         "DI_combined_vs_KS_mean": {
-          "rank_match": true
+          "rank_match": false
         },
         "DI_SCS_vs_KS_mean": {
           "rank_match": false
@@ -663,6 +834,516 @@
         },
         "DI_ICE_vs_KS_mean": {
           "rank_match": true
+        },
+        "DI_combined_vs_MeanDiff_mean": {
+          "rank_match": false
+        },
+        "DI_SCS_vs_MeanDiff_mean": {
+          "rank_match": false
+        },
+        "DI_VCR_vs_MeanDiff_mean": {
+          "rank_match": false
+        },
+        "DI_ICE_vs_MeanDiff_mean": {
+          "rank_match": true
+        }
+      }
+    },
+    {
+      "country": "Argentina",
+      "n_methods": 6,
+      "method_ranks": [
+        {
+          "method": "cultural",
+          "WD_mean_rank": 5,
+          "WD_mean": 1.1422,
+          "JSD_mean_rank": 3,
+          "JSD_mean": 0.2518,
+          "KS_mean_rank": 3,
+          "KS_mean": 0.5098,
+          "MeanDiff_mean_rank": 6,
+          "MeanDiff_mean": 0.9958,
+          "DI_combined_rank": 5,
+          "DI_combined": 0.4635,
+          "DI_SCS_rank": 3,
+          "DI_SCS": 0.41,
+          "DI_VCR_rank": 1,
+          "DI_VCR": 0.0,
+          "DI_ICE_rank": 6,
+          "DI_ICE": -0.3149
+        },
+        {
+          "method": "opencharacter",
+          "WD_mean_rank": 3,
+          "WD_mean": 0.9292,
+          "JSD_mean_rank": 4,
+          "JSD_mean": 0.2812,
+          "KS_mean_rank": 6,
+          "KS_mean": 0.5497,
+          "MeanDiff_mean_rank": 2,
+          "MeanDiff_mean": 0.7585,
+          "DI_combined_rank": 2,
+          "DI_combined": 0.196,
+          "DI_SCS_rank": 2,
+          "DI_SCS": 0.2899,
+          "DI_VCR_rank": 1,
+          "DI_VCR": 0.0,
+          "DI_ICE_rank": 3,
+          "DI_ICE": -0.5661
+        },
+        {
+          "method": "deep_persona",
+          "WD_mean_rank": 1,
+          "WD_mean": 0.574,
+          "JSD_mean_rank": 1,
+          "JSD_mean": 0.1612,
+          "KS_mean_rank": 2,
+          "KS_mean": 0.3822,
+          "MeanDiff_mean_rank": 1,
+          "MeanDiff_mean": 0.4311,
+          "DI_combined_rank": 3,
+          "DI_combined": 0.3305,
+          "DI_SCS_rank": 5,
+          "DI_SCS": 0.5726,
+          "DI_VCR_rank": 1,
+          "DI_VCR": 0.0,
+          "DI_ICE_rank": 2,
+          "DI_ICE": -0.5838
+        },
+        {
+          "method": "cultural",
+          "WD_mean_rank": 6,
+          "WD_mean": 1.1809,
+          "JSD_mean_rank": 6,
+          "JSD_mean": 0.3381,
+          "KS_mean_rank": 5,
+          "KS_mean": 0.5458,
+          "MeanDiff_mean_rank": 5,
+          "MeanDiff_mean": 0.8523,
+          "DI_combined_rank": 6,
+          "DI_combined": 0.5114,
+          "DI_SCS_rank": 6,
+          "DI_SCS": 0.6398,
+          "DI_VCR_rank": 1,
+          "DI_VCR": 0.0,
+          "DI_ICE_rank": 5,
+          "DI_ICE": -0.4049
+        },
+        {
+          "method": "opencharacter",
+          "WD_mean_rank": 4,
+          "WD_mean": 1.1222,
+          "JSD_mean_rank": 5,
+          "JSD_mean": 0.3079,
+          "KS_mean_rank": 4,
+          "KS_mean": 0.5118,
+          "MeanDiff_mean_rank": 4,
+          "MeanDiff_mean": 0.8068,
+          "DI_combined_rank": 4,
+          "DI_combined": 0.4626,
+          "DI_SCS_rank": 4,
+          "DI_SCS": 0.5595,
+          "DI_VCR_rank": 1,
+          "DI_VCR": 0.0,
+          "DI_ICE_rank": 4,
+          "DI_ICE": -0.4129
+        },
+        {
+          "method": "deep_persona",
+          "WD_mean_rank": 2,
+          "WD_mean": 0.9086,
+          "JSD_mean_rank": 2,
+          "JSD_mean": 0.1635,
+          "KS_mean_rank": 1,
+          "KS_mean": 0.3777,
+          "MeanDiff_mean_rank": 3,
+          "MeanDiff_mean": 0.7843,
+          "DI_combined_rank": 1,
+          "DI_combined": 0.0722,
+          "DI_SCS_rank": 1,
+          "DI_SCS": 0.2534,
+          "DI_VCR_rank": 1,
+          "DI_VCR": 0.0,
+          "DI_ICE_rank": 1,
+          "DI_ICE": -0.6946
+        }
+      ],
+      "concordances": {
+        "DI_combined_vs_WD_mean": {
+          "rank_match": false
+        },
+        "DI_SCS_vs_WD_mean": {
+          "rank_match": false
+        },
+        "DI_VCR_vs_WD_mean": {
+          "rank_match": false
+        },
+        "DI_ICE_vs_WD_mean": {
+          "rank_match": false
+        },
+        "DI_combined_vs_JSD_mean": {
+          "rank_match": false
+        },
+        "DI_SCS_vs_JSD_mean": {
+          "rank_match": false
+        },
+        "DI_VCR_vs_JSD_mean": {
+          "rank_match": false
+        },
+        "DI_ICE_vs_JSD_mean": {
+          "rank_match": false
+        },
+        "DI_combined_vs_KS_mean": {
+          "rank_match": false
+        },
+        "DI_SCS_vs_KS_mean": {
+          "rank_match": false
+        },
+        "DI_VCR_vs_KS_mean": {
+          "rank_match": false
+        },
+        "DI_ICE_vs_KS_mean": {
+          "rank_match": false
+        },
+        "DI_combined_vs_MeanDiff_mean": {
+          "rank_match": false
+        },
+        "DI_SCS_vs_MeanDiff_mean": {
+          "rank_match": false
+        },
+        "DI_VCR_vs_MeanDiff_mean": {
+          "rank_match": false
+        },
+        "DI_ICE_vs_MeanDiff_mean": {
+          "rank_match": false
+        }
+      }
+    },
+    {
+      "country": "Australia",
+      "n_methods": 6,
+      "method_ranks": [
+        {
+          "method": "cultural",
+          "WD_mean_rank": 5,
+          "WD_mean": 1.1975,
+          "JSD_mean_rank": 5,
+          "JSD_mean": 0.3243,
+          "KS_mean_rank": 6,
+          "KS_mean": 0.5715,
+          "MeanDiff_mean_rank": 3,
+          "MeanDiff_mean": 0.8273,
+          "DI_combined_rank": 4,
+          "DI_combined": 0.4107,
+          "DI_SCS_rank": 2,
+          "DI_SCS": 0.3449,
+          "DI_VCR_rank": 1,
+          "DI_VCR": 0.0,
+          "DI_ICE_rank": 6,
+          "DI_ICE": -0.3376
+        },
+        {
+          "method": "opencharacter",
+          "WD_mean_rank": 2,
+          "WD_mean": 0.8875,
+          "JSD_mean_rank": 3,
+          "JSD_mean": 0.2499,
+          "KS_mean_rank": 3,
+          "KS_mean": 0.4737,
+          "MeanDiff_mean_rank": 1,
+          "MeanDiff_mean": 0.5392,
+          "DI_combined_rank": 2,
+          "DI_combined": 0.2402,
+          "DI_SCS_rank": 1,
+          "DI_SCS": 0.1866,
+          "DI_VCR_rank": 1,
+          "DI_VCR": 0.0,
+          "DI_ICE_rank": 3,
+          "DI_ICE": -0.4447
+        },
+        {
+          "method": "deep_persona",
+          "WD_mean_rank": 1,
+          "WD_mean": 0.814,
+          "JSD_mean_rank": 1,
+          "JSD_mean": 0.1314,
+          "KS_mean_rank": 1,
+          "KS_mean": 0.341,
+          "MeanDiff_mean_rank": 2,
+          "MeanDiff_mean": 0.7564,
+          "DI_combined_rank": 3,
+          "DI_combined": 0.3206,
+          "DI_SCS_rank": 5,
+          "DI_SCS": 0.6288,
+          "DI_VCR_rank": 1,
+          "DI_VCR": 0.0,
+          "DI_ICE_rank": 2,
+          "DI_ICE": -0.6323
+        },
+        {
+          "method": "cultural",
+          "WD_mean_rank": 6,
+          "WD_mean": 1.2041,
+          "JSD_mean_rank": 6,
+          "JSD_mean": 0.3348,
+          "KS_mean_rank": 5,
+          "KS_mean": 0.5443,
+          "MeanDiff_mean_rank": 6,
+          "MeanDiff_mean": 0.8915,
+          "DI_combined_rank": 6,
+          "DI_combined": 0.529,
+          "DI_SCS_rank": 6,
+          "DI_SCS": 0.6399,
+          "DI_VCR_rank": 1,
+          "DI_VCR": 0.0,
+          "DI_ICE_rank": 5,
+          "DI_ICE": -0.3833
+        },
+        {
+          "method": "opencharacter",
+          "WD_mean_rank": 4,
+          "WD_mean": 1.1453,
+          "JSD_mean_rank": 4,
+          "JSD_mean": 0.3053,
+          "KS_mean_rank": 4,
+          "KS_mean": 0.5121,
+          "MeanDiff_mean_rank": 4,
+          "MeanDiff_mean": 0.8574,
+          "DI_combined_rank": 5,
+          "DI_combined": 0.4752,
+          "DI_SCS_rank": 4,
+          "DI_SCS": 0.6267,
+          "DI_VCR_rank": 1,
+          "DI_VCR": 0.0,
+          "DI_ICE_rank": 4,
+          "DI_ICE": -0.441
+        },
+        {
+          "method": "deep_persona",
+          "WD_mean_rank": 3,
+          "WD_mean": 0.9602,
+          "JSD_mean_rank": 2,
+          "JSD_mean": 0.1615,
+          "KS_mean_rank": 2,
+          "KS_mean": 0.403,
+          "MeanDiff_mean_rank": 5,
+          "MeanDiff_mean": 0.8701,
+          "DI_combined_rank": 1,
+          "DI_combined": 0.1274,
+          "DI_SCS_rank": 3,
+          "DI_SCS": 0.3733,
+          "DI_VCR_rank": 1,
+          "DI_VCR": 0.0,
+          "DI_ICE_rank": 1,
+          "DI_ICE": -0.7044
+        }
+      ],
+      "concordances": {
+        "DI_combined_vs_WD_mean": {
+          "rank_match": false
+        },
+        "DI_SCS_vs_WD_mean": {
+          "rank_match": false
+        },
+        "DI_VCR_vs_WD_mean": {
+          "rank_match": false
+        },
+        "DI_ICE_vs_WD_mean": {
+          "rank_match": false
+        },
+        "DI_combined_vs_JSD_mean": {
+          "rank_match": false
+        },
+        "DI_SCS_vs_JSD_mean": {
+          "rank_match": false
+        },
+        "DI_VCR_vs_JSD_mean": {
+          "rank_match": false
+        },
+        "DI_ICE_vs_JSD_mean": {
+          "rank_match": false
+        },
+        "DI_combined_vs_KS_mean": {
+          "rank_match": false
+        },
+        "DI_SCS_vs_KS_mean": {
+          "rank_match": false
+        },
+        "DI_VCR_vs_KS_mean": {
+          "rank_match": false
+        },
+        "DI_ICE_vs_KS_mean": {
+          "rank_match": false
+        },
+        "DI_combined_vs_MeanDiff_mean": {
+          "rank_match": false
+        },
+        "DI_SCS_vs_MeanDiff_mean": {
+          "rank_match": false
+        },
+        "DI_VCR_vs_MeanDiff_mean": {
+          "rank_match": false
+        },
+        "DI_ICE_vs_MeanDiff_mean": {
+          "rank_match": false
+        }
+      }
+    },
+    {
+      "country": "India",
+      "n_methods": 6,
+      "method_ranks": [
+        {
+          "method": "cultural",
+          "WD_mean_rank": 6,
+          "WD_mean": 1.3847,
+          "JSD_mean_rank": 5,
+          "JSD_mean": 0.3311,
+          "KS_mean_rank": 6,
+          "KS_mean": 0.619,
+          "MeanDiff_mean_rank": 6,
+          "MeanDiff_mean": 1.2615,
+          "DI_combined_rank": 3,
+          "DI_combined": 0.3942,
+          "DI_SCS_rank": 3,
+          "DI_SCS": 0.5233,
+          "DI_VCR_rank": 1,
+          "DI_VCR": 0.0,
+          "DI_ICE_rank": 3,
+          "DI_ICE": -0.4735
+        },
+        {
+          "method": "opencharacter",
+          "WD_mean_rank": 2,
+          "WD_mean": 0.9218,
+          "JSD_mean_rank": 3,
+          "JSD_mean": 0.3085,
+          "KS_mean_rank": 5,
+          "KS_mean": 0.5799,
+          "MeanDiff_mean_rank": 2,
+          "MeanDiff_mean": 0.7432,
+          "DI_combined_rank": 6,
+          "DI_combined": 0.5588,
+          "DI_SCS_rank": 6,
+          "DI_SCS": 0.7641,
+          "DI_VCR_rank": 1,
+          "DI_VCR": 0.0,
+          "DI_ICE_rank": 4,
+          "DI_ICE": -0.4272
+        },
+        {
+          "method": "deep_persona",
+          "WD_mean_rank": 1,
+          "WD_mean": 0.6643,
+          "JSD_mean_rank": 2,
+          "JSD_mean": 0.1851,
+          "KS_mean_rank": 2,
+          "KS_mean": 0.4426,
+          "MeanDiff_mean_rank": 1,
+          "MeanDiff_mean": 0.6162,
+          "DI_combined_rank": 2,
+          "DI_combined": 0.3636,
+          "DI_SCS_rank": 5,
+          "DI_SCS": 0.665,
+          "DI_VCR_rank": 1,
+          "DI_VCR": 0.0,
+          "DI_ICE_rank": 2,
+          "DI_ICE": -0.603
+        },
+        {
+          "method": "cultural",
+          "WD_mean_rank": 5,
+          "WD_mean": 1.2256,
+          "JSD_mean_rank": 6,
+          "JSD_mean": 0.345,
+          "KS_mean_rank": 4,
+          "KS_mean": 0.5378,
+          "MeanDiff_mean_rank": 5,
+          "MeanDiff_mean": 0.8719,
+          "DI_combined_rank": 5,
+          "DI_combined": 0.506,
+          "DI_SCS_rank": 4,
+          "DI_SCS": 0.5952,
+          "DI_VCR_rank": 1,
+          "DI_VCR": 0.0,
+          "DI_ICE_rank": 6,
+          "DI_ICE": -0.3827
+        },
+        {
+          "method": "opencharacter",
+          "WD_mean_rank": 4,
+          "WD_mean": 1.1424,
+          "JSD_mean_rank": 4,
+          "JSD_mean": 0.3088,
+          "KS_mean_rank": 3,
+          "KS_mean": 0.4828,
+          "MeanDiff_mean_rank": 3,
+          "MeanDiff_mean": 0.7494,
+          "DI_combined_rank": 4,
+          "DI_combined": 0.4515,
+          "DI_SCS_rank": 2,
+          "DI_SCS": 0.5211,
+          "DI_VCR_rank": 1,
+          "DI_VCR": 0.0,
+          "DI_ICE_rank": 5,
+          "DI_ICE": -0.4016
+        },
+        {
+          "method": "deep_persona",
+          "WD_mean_rank": 3,
+          "WD_mean": 0.9616,
+          "JSD_mean_rank": 1,
+          "JSD_mean": 0.1651,
+          "KS_mean_rank": 1,
+          "KS_mean": 0.3841,
+          "MeanDiff_mean_rank": 4,
+          "MeanDiff_mean": 0.8315,
+          "DI_combined_rank": 1,
+          "DI_combined": 0.0604,
+          "DI_SCS_rank": 1,
+          "DI_SCS": 0.2379,
+          "DI_VCR_rank": 1,
+          "DI_VCR": 0.0,
+          "DI_ICE_rank": 1,
+          "DI_ICE": -0.6991
+        }
+      ],
+      "concordances": {
+        "DI_combined_vs_WD_mean": {
+          "rank_match": false
+        },
+        "DI_SCS_vs_WD_mean": {
+          "rank_match": false
+        },
+        "DI_VCR_vs_WD_mean": {
+          "rank_match": false
+        },
+        "DI_ICE_vs_WD_mean": {
+          "rank_match": false
+        },
+        "DI_combined_vs_JSD_mean": {
+          "rank_match": false
+        },
+        "DI_SCS_vs_JSD_mean": {
+          "rank_match": false
+        },
+        "DI_VCR_vs_JSD_mean": {
+          "rank_match": false
+        },
+        "DI_ICE_vs_JSD_mean": {
+          "rank_match": false
+        },
+        "DI_combined_vs_KS_mean": {
+          "rank_match": false
+        },
+        "DI_SCS_vs_KS_mean": {
+          "rank_match": false
+        },
+        "DI_VCR_vs_KS_mean": {
+          "rank_match": false
+        },
+        "DI_ICE_vs_KS_mean": {
+          "rank_match": false
         },
         "DI_combined_vs_MeanDiff_mean": {
           "rank_match": false
@@ -684,60 +1365,60 @@
       "method_ranks": [
         {
           "method": "cultural",
-          "WD_mean_rank": 2,
-          "WD_mean": 1.5572,
-          "JSD_mean_rank": 3,
-          "JSD_mean": 0.2798,
-          "KS_mean_rank": 2,
-          "KS_mean": 0.4789,
-          "MeanDiff_mean_rank": 2,
-          "MeanDiff_mean": 1.1917,
-          "DI_combined_rank": 3,
-          "DI_combined": 0.5049,
-          "DI_SCS_rank": 3,
-          "DI_SCS": 0.7211,
-          "DI_VCR_rank": 1,
-          "DI_VCR": 0.0,
-          "DI_ICE_rank": 3,
-          "DI_ICE": -0.2247
-        },
-        {
-          "method": "opencharacter",
           "WD_mean_rank": 1,
-          "WD_mean": 1.2772,
-          "JSD_mean_rank": 2,
-          "JSD_mean": 0.2581,
-          "KS_mean_rank": 3,
-          "KS_mean": 0.5067,
+          "WD_mean": 1.4244,
+          "JSD_mean_rank": 1,
+          "JSD_mean": 0.252,
+          "KS_mean_rank": 1,
+          "KS_mean": 0.42,
           "MeanDiff_mean_rank": 1,
-          "MeanDiff_mean": 0.8628,
-          "DI_combined_rank": 2,
-          "DI_combined": 0.4074,
-          "DI_SCS_rank": 2,
-          "DI_SCS": 0.5643,
+          "MeanDiff_mean": 1.0378,
+          "DI_combined_rank": 3,
+          "DI_combined": 0.5595,
+          "DI_SCS_rank": 3,
+          "DI_SCS": 0.6059,
           "DI_VCR_rank": 1,
           "DI_VCR": 0.0,
           "DI_ICE_rank": 2,
-          "DI_ICE": -0.2945
+          "DI_ICE": -0.3238
+        },
+        {
+          "method": "opencharacter",
+          "WD_mean_rank": 2,
+          "WD_mean": 1.6006,
+          "JSD_mean_rank": 2,
+          "JSD_mean": 0.2673,
+          "KS_mean_rank": 2,
+          "KS_mean": 0.525,
+          "MeanDiff_mean_rank": 2,
+          "MeanDiff_mean": 1.3928,
+          "DI_combined_rank": 2,
+          "DI_combined": 0.504,
+          "DI_SCS_rank": 2,
+          "DI_SCS": 0.492,
+          "DI_VCR_rank": 1,
+          "DI_VCR": 0.0,
+          "DI_ICE_rank": 3,
+          "DI_ICE": -0.3182
         },
         {
           "method": "deep_persona",
           "WD_mean_rank": 3,
-          "WD_mean": 2.0833,
-          "JSD_mean_rank": 1,
-          "JSD_mean": 0.2527,
-          "KS_mean_rank": 1,
-          "KS_mean": 0.4483,
+          "WD_mean": 2.8167,
+          "JSD_mean_rank": 3,
+          "JSD_mean": 0.346,
+          "KS_mean_rank": 3,
+          "KS_mean": 0.6239,
           "MeanDiff_mean_rank": 3,
-          "MeanDiff_mean": 1.86,
+          "MeanDiff_mean": 2.7711,
           "DI_combined_rank": 1,
-          "DI_combined": 0.0327,
+          "DI_combined": 0.3954,
           "DI_SCS_rank": 1,
-          "DI_SCS": 0.0731,
-          "DI_VCR_rank": 1,
-          "DI_VCR": 0.0,
+          "DI_SCS": 0.1316,
+          "DI_VCR_rank": 3,
+          "DI_VCR": 0.0661,
           "DI_ICE_rank": 1,
-          "DI_ICE": -0.603
+          "DI_ICE": -0.5398
         }
       ],
       "concordances": {
@@ -748,22 +1429,22 @@
           "rank_match": false
         },
         "DI_VCR_vs_WD_mean": {
-          "rank_match": false
+          "rank_match": true
         },
         "DI_ICE_vs_WD_mean": {
           "rank_match": false
         },
         "DI_combined_vs_JSD_mean": {
-          "rank_match": true
-        },
-        "DI_SCS_vs_JSD_mean": {
-          "rank_match": true
-        },
-        "DI_VCR_vs_JSD_mean": {
           "rank_match": false
         },
-        "DI_ICE_vs_JSD_mean": {
+        "DI_SCS_vs_JSD_mean": {
+          "rank_match": false
+        },
+        "DI_VCR_vs_JSD_mean": {
           "rank_match": true
+        },
+        "DI_ICE_vs_JSD_mean": {
+          "rank_match": false
         },
         "DI_combined_vs_KS_mean": {
           "rank_match": false
@@ -772,7 +1453,7 @@
           "rank_match": false
         },
         "DI_VCR_vs_KS_mean": {
-          "rank_match": false
+          "rank_match": true
         },
         "DI_ICE_vs_KS_mean": {
           "rank_match": false
@@ -784,7 +1465,7 @@
           "rank_match": false
         },
         "DI_VCR_vs_MeanDiff_mean": {
-          "rank_match": false
+          "rank_match": true
         },
         "DI_ICE_vs_MeanDiff_mean": {
           "rank_match": false
@@ -797,68 +1478,68 @@
       "method_ranks": [
         {
           "method": "cultural",
-          "WD_mean_rank": 3,
-          "WD_mean": 2.0958,
-          "JSD_mean_rank": 3,
-          "JSD_mean": 0.3868,
-          "KS_mean_rank": 3,
-          "KS_mean": 0.6374,
-          "MeanDiff_mean_rank": 3,
-          "MeanDiff_mean": 1.7911,
-          "DI_combined_rank": 3,
-          "DI_combined": 0.468,
-          "DI_SCS_rank": 3,
-          "DI_SCS": 0.7582,
-          "DI_VCR_rank": 1,
-          "DI_VCR": 0.0,
-          "DI_ICE_rank": 2,
-          "DI_ICE": -0.2861
-        },
-        {
-          "method": "opencharacter",
           "WD_mean_rank": 2,
-          "WD_mean": 1.7078,
-          "JSD_mean_rank": 2,
-          "JSD_mean": 0.3087,
-          "KS_mean_rank": 2,
-          "KS_mean": 0.5438,
-          "MeanDiff_mean_rank": 1,
-          "MeanDiff_mean": 1.369,
-          "DI_combined_rank": 2,
-          "DI_combined": 0.4345,
-          "DI_SCS_rank": 2,
-          "DI_SCS": 0.6346,
+          "WD_mean": 2.0725,
+          "JSD_mean_rank": 3,
+          "JSD_mean": 0.368,
+          "KS_mean_rank": 3,
+          "KS_mean": 0.6452,
+          "MeanDiff_mean_rank": 2,
+          "MeanDiff_mean": 1.8972,
+          "DI_combined_rank": 3,
+          "DI_combined": 0.6444,
+          "DI_SCS_rank": 3,
+          "DI_SCS": 0.7219,
           "DI_VCR_rank": 1,
           "DI_VCR": 0.0,
           "DI_ICE_rank": 3,
-          "DI_ICE": -0.2848
+          "DI_ICE": -0.2945
+        },
+        {
+          "method": "opencharacter",
+          "WD_mean_rank": 1,
+          "WD_mean": 2.0345,
+          "JSD_mean_rank": 2,
+          "JSD_mean": 0.337,
+          "KS_mean_rank": 2,
+          "KS_mean": 0.6068,
+          "MeanDiff_mean_rank": 1,
+          "MeanDiff_mean": 1.8822,
+          "DI_combined_rank": 2,
+          "DI_combined": 0.5263,
+          "DI_SCS_rank": 2,
+          "DI_SCS": 0.5687,
+          "DI_VCR_rank": 1,
+          "DI_VCR": 0.0,
+          "DI_ICE_rank": 2,
+          "DI_ICE": -0.3405
         },
         {
           "method": "deep_persona",
-          "WD_mean_rank": 1,
-          "WD_mean": 1.5053,
+          "WD_mean_rank": 3,
+          "WD_mean": 2.2931,
           "JSD_mean_rank": 1,
-          "JSD_mean": 0.1966,
+          "JSD_mean": 0.285,
           "KS_mean_rank": 1,
-          "KS_mean": 0.4216,
-          "MeanDiff_mean_rank": 2,
-          "MeanDiff_mean": 1.44,
+          "KS_mean": 0.5438,
+          "MeanDiff_mean_rank": 3,
+          "MeanDiff_mean": 2.2869,
           "DI_combined_rank": 1,
-          "DI_combined": 0.0297,
+          "DI_combined": 0.4552,
           "DI_SCS_rank": 1,
-          "DI_SCS": 0.0832,
-          "DI_VCR_rank": 1,
-          "DI_VCR": 0.0,
+          "DI_SCS": 0.1383,
+          "DI_VCR_rank": 3,
+          "DI_VCR": 0.0843,
           "DI_ICE_rank": 1,
-          "DI_ICE": -0.6106
+          "DI_ICE": -0.559
         }
       ],
       "concordances": {
         "DI_combined_vs_WD_mean": {
-          "rank_match": true
+          "rank_match": false
         },
         "DI_SCS_vs_WD_mean": {
-          "rank_match": true
+          "rank_match": false
         },
         "DI_VCR_vs_WD_mean": {
           "rank_match": false
@@ -876,7 +1557,7 @@
           "rank_match": false
         },
         "DI_ICE_vs_JSD_mean": {
-          "rank_match": false
+          "rank_match": true
         },
         "DI_combined_vs_KS_mean": {
           "rank_match": true
@@ -888,7 +1569,7 @@
           "rank_match": false
         },
         "DI_ICE_vs_KS_mean": {
-          "rank_match": false
+          "rank_match": true
         },
         "DI_combined_vs_MeanDiff_mean": {
           "rank_match": false
@@ -907,117 +1588,117 @@
   ],
   "pooled": {
     "DI_combined_vs_WD_mean": {
-      "spearman_r": 0.35478260869565215,
-      "spearman_p": 0.08891743107314606,
-      "kendall_tau": 0.2971014492753623,
-      "kendall_p": 0.04361625580154652,
-      "n": 24
+      "spearman_r": 0.6577540106951872,
+      "spearman_p": 3.188702393229828e-05,
+      "kendall_tau": 0.4090909090909091,
+      "kendall_p": 0.0006420255488966,
+      "n": 33
     },
     "DI_SCS_vs_WD_mean": {
-      "spearman_r": -0.7678260869565217,
-      "spearman_p": 1.187025297467209e-05,
-      "kendall_tau": -0.5507246376811594,
-      "kendall_p": 8.3512346907893e-05,
-      "n": 24
+      "spearman_r": -0.1985294117647059,
+      "spearman_p": 0.2680520068083982,
+      "kendall_tau": -0.10984848484848485,
+      "kendall_p": 0.3800429221042466,
+      "n": 33
     },
     "DI_VCR_vs_WD_mean": {
-      "spearman_r": NaN,
-      "spearman_p": NaN,
-      "kendall_tau": NaN,
-      "kendall_p": NaN,
-      "n": 24
+      "spearman_r": 0.4128622024803981,
+      "spearman_p": 0.01694556548700222,
+      "kendall_tau": 0.3344587782712159,
+      "kendall_p": 0.02147267998316316,
+      "n": 33
     },
     "DI_ICE_vs_WD_mean": {
-      "spearman_r": 0.5579981540695812,
-      "spearman_p": 0.004605217313090068,
-      "kendall_tau": 0.42336894279349324,
-      "kendall_p": 0.003958496062166369,
-      "n": 24
+      "spearman_r": 0.6472800223150642,
+      "spearman_p": 4.6773359043857567e-05,
+      "kendall_tau": 0.49099548123159475,
+      "kendall_p": 5.9816205962807096e-05,
+      "n": 33
     },
     "DI_combined_vs_JSD_mean": {
-      "spearman_r": 0.6547826086956522,
-      "spearman_p": 0.0005167191006814656,
-      "kendall_tau": 0.4782608695652174,
-      "kendall_p": 0.0007898981683398482,
-      "n": 24
+      "spearman_r": 0.6490641711229947,
+      "spearman_p": 4.3863112198174074e-05,
+      "kendall_tau": 0.41287878787878785,
+      "kendall_p": 0.0005663500152443642,
+      "n": 33
     },
     "DI_SCS_vs_JSD_mean": {
-      "spearman_r": -0.5278260869565217,
-      "spearman_p": 0.0080271299210726,
-      "kendall_tau": -0.35507246376811596,
-      "kendall_p": 0.014944914620183143,
-      "n": 24
+      "spearman_r": -0.03308823529411765,
+      "spearman_p": 0.8549563550625329,
+      "kendall_tau": -0.022727272727272728,
+      "kendall_p": 0.865751029555975,
+      "n": 33
     },
     "DI_VCR_vs_JSD_mean": {
-      "spearman_r": NaN,
-      "spearman_p": NaN,
-      "kendall_tau": NaN,
-      "kendall_p": NaN,
-      "n": 24
+      "spearman_r": 0.2084509750292421,
+      "spearman_p": 0.24437119385390374,
+      "kendall_tau": 0.16997085453127364,
+      "kendall_p": 0.24255146295506025,
+      "n": 33
     },
     "DI_ICE_vs_JSD_mean": {
-      "spearman_r": 0.7973889377967806,
-      "spearman_p": 3.0805641066357823e-06,
-      "kendall_tau": 0.6058555560665507,
-      "kendall_p": 3.732317300689684e-05,
-      "n": 24
+      "spearman_r": 0.697083649128875,
+      "spearman_p": 6.567036106089723e-06,
+      "kendall_tau": 0.5099528357193011,
+      "kendall_p": 3.066142267810958e-05,
+      "n": 33
     },
     "DI_combined_vs_KS_mean": {
-      "spearman_r": 0.5956521739130434,
-      "spearman_p": 0.002132598633880756,
-      "kendall_tau": 0.4275362318840579,
-      "kendall_p": 0.002989415703746229,
-      "n": 24
+      "spearman_r": 0.565173796791444,
+      "spearman_p": 0.0006102340221184208,
+      "kendall_tau": 0.3939393939393939,
+      "kendall_p": 0.001046196742286816,
+      "n": 33
     },
     "DI_SCS_vs_KS_mean": {
-      "spearman_r": -0.5017391304347826,
-      "spearman_p": 0.012487219414302054,
-      "kendall_tau": -0.34782608695652173,
-      "kendall_p": 0.01725667966721163,
-      "n": 24
+      "spearman_r": -0.07620320855614975,
+      "spearman_p": 0.6733981635635299,
+      "kendall_tau": -0.04924242424242424,
+      "kendall_p": 0.7007201583617998,
+      "n": 33
     },
     "DI_VCR_vs_KS_mean": {
-      "spearman_r": NaN,
-      "spearman_p": NaN,
-      "kendall_tau": NaN,
-      "kendall_p": NaN,
-      "n": 24
+      "spearman_r": 0.26258359257559566,
+      "spearman_p": 0.13985990074549878,
+      "kendall_tau": 0.2138343008619249,
+      "kendall_p": 0.14150328744001042,
+      "n": 33
     },
     "DI_ICE_vs_KS_mean": {
-      "spearman_r": 0.7159960713295328,
-      "spearman_p": 8.341916320988838e-05,
-      "kendall_tau": 0.49636358810271614,
-      "kendall_p": 0.0007294816509717217,
-      "n": 24
+      "spearman_r": 0.5984791530881086,
+      "spearman_p": 0.00023415507191408495,
+      "kendall_tau": 0.41516606328076927,
+      "kendall_p": 0.0006895927147314105,
+      "n": 33
     },
     "DI_combined_vs_MeanDiff_mean": {
-      "spearman_r": 0.24260869565217388,
-      "spearman_p": 0.25334838197246123,
-      "kendall_tau": 0.1956521739130435,
-      "kendall_p": 0.1907535857010569,
-      "n": 24
+      "spearman_r": 0.5631684491978609,
+      "spearman_p": 0.0006443964389326142,
+      "kendall_tau": 0.37121212121212116,
+      "kendall_p": 0.0020932453466807237,
+      "n": 33
     },
     "DI_SCS_vs_MeanDiff_mean": {
-      "spearman_r": -0.7426086956521739,
-      "spearman_p": 3.24373831122718e-05,
-      "kendall_tau": -0.536231884057971,
-      "kendall_p": 0.00013569693294094353,
-      "n": 24
+      "spearman_r": -0.1891711229946524,
+      "spearman_p": 0.29171768803971815,
+      "kendall_tau": -0.125,
+      "kendall_p": 0.31650710505376345,
+      "n": 33
     },
     "DI_VCR_vs_MeanDiff_mean": {
-      "spearman_r": NaN,
-      "spearman_p": NaN,
-      "kendall_tau": NaN,
-      "kendall_p": NaN,
-      "n": 24
+      "spearman_r": 0.4128622024803981,
+      "spearman_p": 0.01694556548700222,
+      "kendall_tau": 0.3344587782712159,
+      "kendall_p": 0.02147267998316316,
+      "n": 33
     },
     "DI_ICE_vs_MeanDiff_mean": {
-      "spearman_r": 0.42742136294565425,
-      "spearman_p": 0.03722298882690123,
-      "kendall_tau": 0.2773796521750473,
-      "kendall_p": 0.059046523620863,
-      "n": 24
+      "spearman_r": 0.5027158035434323,
+      "spearman_p": 0.0028674135028102458,
+      "kendall_tau": 0.36966841251027405,
+      "kendall_p": 0.002512987354973072,
+      "n": 33
     }
   },
-  "n_conditions": 24
+  "n_conditions": 33
 }

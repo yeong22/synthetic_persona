@@ -1,0 +1,299 @@
+[
+  {
+    "domain": "wvs",
+    "country": "Argentina",
+    "method": "cultural",
+    "RSI_para": 0.4761111111111111,
+    "RSI_rev": 1.0366666666666666,
+    "RSI": 0.7157625619249823,
+    "SDBS": 0.13266666666666665
+  },
+  {
+    "domain": "wvs",
+    "country": "Argentina",
+    "method": "opencharacter",
+    "RSI_para": 0.4766666666666667,
+    "RSI_rev": 0.7605555555555555,
+    "RSI": 0.8872158135063686,
+    "SDBS": -0.20600000000000002
+  },
+  {
+    "domain": "wvs",
+    "country": "Argentina",
+    "method": "deep_persona",
+    "RSI_para": 0.5338888888888889,
+    "RSI_rev": 0.925,
+    "RSI": 0.8017038027332144,
+    "SDBS": -0.188
+  },
+  {
+    "domain": "wvs",
+    "country": "Australia",
+    "method": "cultural",
+    "RSI_para": 0.4711111111111111,
+    "RSI_rev": 1.3111111111111111,
+    "RSI": 0.6140248574899542,
+    "SDBS": 0.44399999999999995
+  },
+  {
+    "domain": "wvs",
+    "country": "Australia",
+    "method": "opencharacter",
+    "RSI_para": 0.4677777777777778,
+    "RSI_rev": 0.7966666666666666,
+    "RSI": 0.8537235996326906,
+    "SDBS": -0.09066666666666666
+  },
+  {
+    "domain": "wvs",
+    "country": "Australia",
+    "method": "deep_persona",
+    "RSI_para": 0.49444444444444446,
+    "RSI_rev": 0.9238888888888889,
+    "RSI": 0.7826178200806398,
+    "SDBS": -0.2033333333333333
+  },
+  {
+    "domain": "wvs",
+    "country": "Germany",
+    "method": "cultural",
+    "RSI_para": 0.5016666666666667,
+    "RSI_rev": 1.0005555555555556,
+    "RSI": 0.7456106835257468,
+    "SDBS": 0.09066666666666667
+  },
+  {
+    "domain": "wvs",
+    "country": "Germany",
+    "method": "opencharacter",
+    "RSI_para": 0.45222222222222225,
+    "RSI_rev": 0.8644444444444445,
+    "RSI": 0.7979027248341098,
+    "SDBS": -0.192
+  },
+  {
+    "domain": "wvs",
+    "country": "Germany",
+    "method": "deep_persona",
+    "RSI_para": 0.5155555555555555,
+    "RSI_rev": 0.93,
+    "RSI": 0.789692671394799,
+    "SDBS": -0.23199999999999998
+  },
+  {
+    "domain": "wvs",
+    "country": "India",
+    "method": "cultural",
+    "RSI_para": 0.2833333333333333,
+    "RSI_rev": 1.1377777777777778,
+    "RSI": 0.5772910616327848,
+    "SDBS": 0.29933333333333334
+  },
+  {
+    "domain": "wvs",
+    "country": "India",
+    "method": "opencharacter",
+    "RSI_para": 0.5511111111111111,
+    "RSI_rev": 0.6272222222222222,
+    "RSI": 1.0602111789208561,
+    "SDBS": -0.184
+  },
+  {
+    "domain": "wvs",
+    "country": "India",
+    "method": "deep_persona",
+    "RSI_para": 0.4905555555555556,
+    "RSI_rev": 0.9416666666666667,
+    "RSI": 0.7706718233119284,
+    "SDBS": -0.21600000000000003
+  },
+  {
+    "domain": "wvs",
+    "country": "Kenya",
+    "method": "cultural",
+    "RSI_para": 0.4033333333333333,
+    "RSI_rev": 1.0922222222222222,
+    "RSI": 0.6552956989247312,
+    "SDBS": 0.09733333333333336
+  },
+  {
+    "domain": "wvs",
+    "country": "Kenya",
+    "method": "opencharacter",
+    "RSI_para": 0.4816666666666667,
+    "RSI_rev": 0.7933333333333333,
+    "RSI": 0.8632399723374827,
+    "SDBS": -0.19866666666666666
+  },
+  {
+    "domain": "wvs",
+    "country": "Kenya",
+    "method": "deep_persona",
+    "RSI_para": 0.5072222222222222,
+    "RSI_rev": 0.9505555555555556,
+    "RSI": 0.774143210590579,
+    "SDBS": -0.18933333333333333
+  },
+  {
+    "domain": "wvs",
+    "country": "United States",
+    "method": "cultural",
+    "RSI_para": 0.36833333333333335,
+    "RSI_rev": 1.0727777777777778,
+    "RSI": 0.6459419360355738,
+    "SDBS": 0.14066666666666666
+  },
+  {
+    "domain": "wvs",
+    "country": "United States",
+    "method": "opencharacter",
+    "RSI_para": 0.4077777777777778,
+    "RSI_rev": 0.7861111111111111,
+    "RSI": 0.831941924478561,
+    "SDBS": -0.184
+  },
+  {
+    "domain": "wvs",
+    "country": "United States",
+    "method": "deep_persona",
+    "RSI_para": 0.49833333333333335,
+    "RSI_rev": 0.93,
+    "RSI": 0.7810815602836879,
+    "SDBS": -0.21333333333333332
+  },
+  {
+    "domain": "bigfive",
+    "country": "Argentina",
+    "method": "cultural",
+    "RSI_para": 0.14966666666666667,
+    "RSI_rev": 1.9110526315789473,
+    "RSI": 0.3351073059360731,
+    "SDBS": 0.0794
+  },
+  {
+    "domain": "bigfive",
+    "country": "Argentina",
+    "method": "opencharacter",
+    "RSI_para": 0.44533333333333336,
+    "RSI_rev": 1.8601754385964913,
+    "RSI": 0.490021263289556,
+    "SDBS": 0.13720000000000002
+  },
+  {
+    "domain": "bigfive",
+    "country": "Argentina",
+    "method": "deep_persona",
+    "RSI_para": 1.0193333333333334,
+    "RSI_rev": 1.5989473684210527,
+    "RSI": 0.8204288518155054,
+    "SDBS": -0.33246666666666663
+  },
+  {
+    "domain": "bigfive",
+    "country": "Australia",
+    "method": "cultural",
+    "RSI_para": 0.13566666666666666,
+    "RSI_rev": 2.0259649122807017,
+    "RSI": 0.3134171334195031,
+    "SDBS": 0.032066666666666674
+  },
+  {
+    "domain": "bigfive",
+    "country": "Australia",
+    "method": "opencharacter",
+    "RSI_para": 0.39466666666666667,
+    "RSI_rev": 1.984561403508772,
+    "RSI": 0.4480150115812004,
+    "SDBS": 0.09839999999999997
+  },
+  {
+    "domain": "bigfive",
+    "country": "Australia",
+    "method": "deep_persona",
+    "RSI_para": 0.9616666666666667,
+    "RSI_rev": 1.6971929824561403,
+    "RSI": 0.7737117630938923,
+    "SDBS": -0.34920000000000007
+  },
+  {
+    "domain": "bigfive",
+    "country": "India",
+    "method": "cultural",
+    "RSI_para": 0.14033333333333334,
+    "RSI_rev": 2.056140350877193,
+    "RSI": 0.312163779683564,
+    "SDBS": 0.08093333333333333
+  },
+  {
+    "domain": "bigfive",
+    "country": "India",
+    "method": "opencharacter",
+    "RSI_para": 0.413,
+    "RSI_rev": 1.8057894736842106,
+    "RSI": 0.48186231884057973,
+    "SDBS": 0.13106666666666666
+  },
+  {
+    "domain": "bigfive",
+    "country": "India",
+    "method": "deep_persona",
+    "RSI_para": 1.0156666666666667,
+    "RSI_rev": 1.613859649122807,
+    "RSI": 0.8157417170844137,
+    "SDBS": -0.3305333333333333
+  },
+  {
+    "domain": "privacy",
+    "country": "South Africa",
+    "method": "cultural",
+    "RSI_para": 0.6455555555555555,
+    "RSI_rev": 1.8533333333333333,
+    "RSI": 0.5911140926257206,
+    "SDBS": -0.01222222222222217
+  },
+  {
+    "domain": "privacy",
+    "country": "South Africa",
+    "method": "opencharacter",
+    "RSI_para": 0.7533333333333333,
+    "RSI_rev": 2.5633333333333335,
+    "RSI": 0.5709671848013816,
+    "SDBS": -0.04277777777777778
+  },
+  {
+    "domain": "privacy",
+    "country": "South Africa",
+    "method": "deep_persona",
+    "RSI_para": 1.0627777777777778,
+    "RSI_rev": 3.6466666666666665,
+    "RSI": 0.6681254431277222,
+    "SDBS": -1.2566666666666666
+  },
+  {
+    "domain": "privacy",
+    "country": "United Kingdom",
+    "method": "cultural",
+    "RSI_para": 0.5894444444444444,
+    "RSI_rev": 1.6422222222222222,
+    "RSI": 0.5973449525517447,
+    "SDBS": -0.09055555555555554
+  },
+  {
+    "domain": "privacy",
+    "country": "United Kingdom",
+    "method": "opencharacter",
+    "RSI_para": 1.0166666666666666,
+    "RSI_rev": 2.16,
+    "RSI": 0.7387480798771121,
+    "SDBS": 0.08999999999999991
+  },
+  {
+    "domain": "privacy",
+    "country": "United Kingdom",
+    "method": "deep_persona",
+    "RSI_para": 0.9327777777777778,
+    "RSI_rev": 3.8755555555555556,
+    "RSI": 0.5950706160836272,
+    "SDBS": -1.337777777777778
+  }
+]

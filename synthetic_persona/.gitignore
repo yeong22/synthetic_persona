@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Data (large files)
+data/wvs/*.csv
+data/wvs/*.zip
+data/wvs/*.pdf
+data/privacy_data_gt/
+
+# vLLM
+results/vllm_server.log
+results/.vllm.pid
+
+# IDE
+.vscode/
+
+# OS
+.DS_Store

@@ -1,0 +1,218 @@
+[
+  {
+    "SignF": 0.2,
+    "SigF": 0.1111111111111111,
+    "NullF": 0.3333333333333333,
+    "SFS": 0.2148148148148148,
+    "domain": "wvs",
+    "country": "Argentina",
+    "method": "cultural"
+  },
+  {
+    "SignF": 0.4,
+    "SigF": 0.3333333333333333,
+    "NullF": 0.3333333333333333,
+    "SFS": 0.35555555555555557,
+    "domain": "wvs",
+    "country": "Argentina",
+    "method": "opencharacter"
+  },
+  {
+    "SignF": 0.4,
+    "SigF": 0.5555555555555556,
+    "NullF": 0.3333333333333333,
+    "SFS": 0.42962962962962964,
+    "domain": "wvs",
+    "country": "Argentina",
+    "method": "deep_persona"
+  },
+  {
+    "SignF": 0.06666666666666667,
+    "SigF": 0.0,
+    "NullF": 0.0,
+    "SFS": 0.022222222222222223,
+    "domain": "wvs",
+    "country": "Australia",
+    "method": "cultural"
+  },
+  {
+    "SignF": 0.3333333333333333,
+    "SigF": 0.23076923076923078,
+    "NullF": 0.0,
+    "SFS": 0.18803418803418803,
+    "domain": "wvs",
+    "country": "Australia",
+    "method": "opencharacter"
+  },
+  {
+    "SignF": 0.4666666666666667,
+    "SigF": 0.5384615384615384,
+    "NullF": 0.5,
+    "SFS": 0.5017094017094017,
+    "domain": "wvs",
+    "country": "Australia",
+    "method": "deep_persona"
+  },
+  {
+    "SignF": 0.06666666666666667,
+    "SigF": 0.0,
+    "NullF": 0.0,
+    "SFS": 0.022222222222222223,
+    "domain": "wvs",
+    "country": "Germany",
+    "method": "cultural"
+  },
+  {
+    "SignF": 0.4,
+    "SigF": 0.16666666666666666,
+    "NullF": 0.3333333333333333,
+    "SFS": 0.3,
+    "domain": "wvs",
+    "country": "Germany",
+    "method": "opencharacter"
+  },
+  {
+    "SignF": 0.4,
+    "SigF": 0.5,
+    "NullF": 0.3333333333333333,
+    "SFS": 0.41111111111111115,
+    "domain": "wvs",
+    "country": "Germany",
+    "method": "deep_persona"
+  },
+  {
+    "SignF": 0.0,
+    "SigF": 0.0,
+    "NullF": 0.1,
+    "SFS": 0.03333333333333333,
+    "domain": "wvs",
+    "country": "India",
+    "method": "cultural"
+  },
+  {
+    "SignF": 0.26666666666666666,
+    "SigF": 0.0,
+    "NullF": 0.4,
+    "SFS": 0.22222222222222224,
+    "domain": "wvs",
+    "country": "India",
+    "method": "opencharacter"
+  },
+  {
+    "SignF": 0.4666666666666667,
+    "SigF": 1.0,
+    "NullF": 0.3,
+    "SFS": 0.5888888888888889,
+    "domain": "wvs",
+    "country": "India",
+    "method": "deep_persona"
+  },
+  {
+    "SignF": 0.13333333333333333,
+    "SigF": 0.0,
+    "NullF": 0.14285714285714285,
+    "SFS": 0.09206349206349207,
+    "domain": "wvs",
+    "country": "Kenya",
+    "method": "cultural"
+  },
+  {
+    "SignF": 0.3333333333333333,
+    "SigF": 0.125,
+    "NullF": 0.2857142857142857,
+    "SFS": 0.24801587301587302,
+    "domain": "wvs",
+    "country": "Kenya",
+    "method": "opencharacter"
+  },
+  {
+    "SignF": 0.4,
+    "SigF": 0.625,
+    "NullF": 0.2857142857142857,
+    "SFS": 0.43690476190476185,
+    "domain": "wvs",
+    "country": "Kenya",
+    "method": "deep_persona"
+  },
+  {
+    "SignF": 0.2,
+    "SigF": 0.0,
+    "NullF": 0.0,
+    "SFS": 0.06666666666666667,
+    "domain": "wvs",
+    "country": "United States",
+    "method": "cultural"
+  },
+  {
+    "SignF": 0.3333333333333333,
+    "SigF": 0.2857142857142857,
+    "NullF": 0.0,
+    "SFS": 0.20634920634920637,
+    "domain": "wvs",
+    "country": "United States",
+    "method": "opencharacter"
+  },
+  {
+    "SignF": 0.4666666666666667,
+    "SigF": 0.42857142857142855,
+    "NullF": 1.0,
+    "SFS": 0.6317460317460317,
+    "domain": "wvs",
+    "country": "United States",
+    "method": "deep_persona"
+  },
+  {
+    "SignF": 0.4666666666666667,
+    "SigF": 0.0,
+    "NullF": 1.0,
+    "SFS": 0.48888888888888893,
+    "domain": "privacy",
+    "country": "South Africa",
+    "method": "cultural"
+  },
+  {
+    "SignF": 0.4,
+    "SigF": 0.07692307692307693,
+    "NullF": 1.0,
+    "SFS": 0.49230769230769234,
+    "domain": "privacy",
+    "country": "South Africa",
+    "method": "opencharacter"
+  },
+  {
+    "SignF": 0.4,
+    "SigF": 0.9230769230769231,
+    "NullF": 0.0,
+    "SFS": 0.44102564102564107,
+    "domain": "privacy",
+    "country": "South Africa",
+    "method": "deep_persona"
+  },
+  {
+    "SignF": 0.3333333333333333,
+    "SigF": 0.08333333333333333,
+    "NullF": 0.6666666666666666,
+    "SFS": 0.3611111111111111,
+    "domain": "privacy",
+    "country": "United Kingdom",
+    "method": "cultural"
+  },
+  {
+    "SignF": 0.4666666666666667,
+    "SigF": 0.08333333333333333,
+    "NullF": 1.0,
+    "SFS": 0.5166666666666667,
+    "domain": "privacy",
+    "country": "United Kingdom",
+    "method": "opencharacter"
+  },
+  {
+    "SignF": 0.4,
+    "SigF": 0.9166666666666666,
+    "NullF": 0.0,
+    "SFS": 0.4388888888888889,
+    "domain": "privacy",
+    "country": "United Kingdom",
+    "method": "deep_persona"
+  }
+]

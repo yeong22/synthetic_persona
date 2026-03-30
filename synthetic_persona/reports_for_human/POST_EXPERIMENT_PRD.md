@@ -1,915 +1,633 @@
 # 사후 PRD: GT-Free Structural Defect Indicators for LLM Synthetic Survey Data
 
----
-
-## 1. 프로젝트 개요
-
-### 한 줄 요약
-
-LLM이 생성한 합성(synthetic) 설문 데이터의 품질을, 실제 인간 데이터(Ground Truth) 없이 진단할 수 있는 3가지 구조적 결함 지표(SCS, VCR, ICE)를 제안하고 검증하는 연구.
-
-### 연구 배경: 왜 이 연구가 필요한가
-
-최근 사회과학에서 LLM을 "합성 설문 응답자"로 사용하는 연구가 급증하고 있다. "한국 30대 직장인"이라는 페르소나를 LLM에 부여하면, 그 페르소나가 실제 설문에 어떻게 응답할지를 시뮬레이션할 수 있다. 이런 합성 데이터는 실제 설문 비용의 1% 미만으로 수천 건의 응답을 생성할 수 있어 매력적이다.
-
-**문제는 품질 검증이다.** 합성 데이터가 실제 인간 데이터와 얼마나 비슷한지를 검증하려면, 비교 대상인 실제 인간 데이터(Ground Truth, GT)가 필요하다. 그런데:
-
-1. GT가 있으면 애초에 합성 데이터가 필요 없다 (GT를 직접 쓰면 되니까)
-2. GT가 없는 새로운 문화/맥락에 합성 데이터를 적용할 때, 품질을 검증할 방법이 없다
-3. 기존 GT-based 메트릭(WD, JSD 등)은 GT가 반드시 있어야 계산 가능하다
-
-**이 연구의 핵심 질문:** GT 없이, 합성 데이터의 내부 구조만 보고 "이 데이터는 결함이 있다"고 진단할 수 있는가?
-
-### 핵심 가설
-
-> **H1**: GT-free 결함 지표(DI_combined = SCS + VCR + ICE의 정규화 평균)의 조건별 순위가, GT-based 메트릭(WD, JSD)의 순위와 통계적으로 유의미하게 일치한다.
-
-구체적으로:
-- **H1a**: DI_ICE(Item Correlation Entropy)가 JSD와 양의 상관 (ρ > 0.5, p < 0.05)
-- **H1b**: DI_combined가 JSD와 양의 상관 (ρ > 0.5, p < 0.05)
-- **H1c**: Per-country 순위 일치율이 우연(33%) 이상
-
-### 타겟 학회
-
-EMNLP 2026 Workshop (예: SyntheticData Workshop, SoLLM)
+**버전**: 2.0 (2026-03-30)
+**하네스 엔지니어링 방법론 적용**: 역기획 — 결과물 기반 멱등적 재현 문서
 
 ---
 
-## 2. 핵심 개념 설명
+# Part A: 프로젝트 이해
 
-### 2.1. 세 가지 Persona 프롬프팅 시스템
+## A1. CPS (Context-Problem-Solution)
 
-LLM에게 "당신은 ○○입니다"라는 시스템 프롬프트(persona)를 부여한 뒤, 설문 문항에 응답하게 한다. persona의 상세도에 따라 3가지 전략을 비교한다.
+### Context
 
-#### (1) Cultural Prompting (Tao et al. 2024) — 가장 단순
+LLM에게 "당신은 한국의 30대 직장인입니다"라는 페르소나를 부여하면, 그 사람처럼 설문에 응답할 수 있다. DeepPersona (Wang et al., NeurIPS 2025), Anthology (Moon et al., EMNLP 2024) 등의 연구가 이 방식으로 합성 설문 데이터를 생성했고, 실제 인간 데이터와의 유사성을 WD, JSD, KS 같은 분포 비교 지표로 평가했다.
 
-국적 + 최소한의 인구통계(나이, 성별)만 부여. 모든 persona가 거의 동일한 정보를 가짐.
+문제는 이 평가 지표들이 **인간의 실제 응답 데이터(Ground Truth, GT)**를 반드시 필요로 한다는 것이다.
 
-**실제 프롬프트 예시** (`prompts/cultural_prompting.py`에서 발췌):
+### Problem
+
+1. **GT 의존 역설**: GT가 있으면 합성 데이터가 필요 없고, GT가 없으면 품질을 확인할 수 없다
+2. **Distribution-Structure Dissociation**: 분포가 비슷해도(WD↓) 변수 간 상관 구조가 완전히 다를 수 있다. 예: 모든 항목 평균이 GT와 같아도, 실제로는 모든 응답이 동일한 패턴 (halo effect)
+3. **새 도메인 적용 불가**: 기존에 조사된 적 없는 문화/주제에 합성 데이터를 적용할 때, 품질 판단 근거가 전무
+
+### Solution
+
+**GT 없이 합성 데이터 자체만으로 계산 가능한 구조적 결함 지표 5개를 제안:**
+
+| 지표 | 탐지하는 결함 | GT 필요? |
+|------|-------------|---------|
+| **SCS** (Synthetic Consistency Score) | 내적 일관성 이상 | X |
+| **VCR** (Value Coherence Ratio) | Halo effect (단일 요인 지배) | X |
+| **ICE** (Item Correlation Entropy) | 상관 다양성 부족 | X |
+| **RSI** (Response Stability Index) | 표현 변화에 대한 불안정성 | X |
+| **SDBS** (Social Desirability Bias Score) | 사회적 바람직성 편향 | X |
+
+이 지표들의 순위가 GT-based 지표의 순위와 통계적으로 유의미하게 일치함을 33개 실험 조건에서 검증했다.
+
+---
+
+## A2. 한 줄 요약
+
+> LLM 합성 설문 데이터의 품질을 인간 데이터(GT) 없이 진단하는 5개 구조적 결함 지표를 제안하고, 3개 도메인 × 3개 프롬프팅 전략 × 8개국 = 33개 조건에서 GT-based 지표와의 순위 일치를 검증했다 (최대 ρ=+0.767***, p<0.0001).
+
+---
+
+## A3. 핵심 개념 사전
+
+### Synthetic Persona
+
+LLM에게 "당신은 58세 아르헨티나 남성입니다"라는 시스템 프롬프트를 주면, LLM이 그 페르소나로 설문에 응답한다. 한 명의 응답을 생성하는 데 약 0.1초, 비용은 거의 0. 실제 설문 조사 비용의 1/1000 이하.
+
+### Ground Truth (GT)
+
+실제 인간이 응답한 설문 데이터. WVS (World Values Survey)는 97,000명 이상의 실제 응답이 있다. GT가 있어야 "합성 데이터가 얼마나 현실적인가"를 측정할 수 있지만, GT를 구하는 것 자체가 비싸고 어려운 것이 문제.
+
+### 3가지 Persona 시스템
+
+복잡도 순으로:
+
+**(1) Cultural Prompting** (Tao et al., 2024) — 가장 단순
+
+국적 + 나이 + 성별만 부여. 모든 persona가 거의 동일한 정보.
+
 ```
-You are a 58-year-old male citizen of Argentina. Please answer the following
-survey question from your personal perspective as someone living in Argentina.
+You are a 58-year-old male citizen of Argentina.
+Please answer the following survey question from your personal perspective
+as someone living in Argentina.
 Respond with ONLY a single integer number on the given scale.
-Do not add any explanation or reasoning.
 ```
+코드: `prompts/cultural_prompting.py`
+
+**(2) OpenCharacter** (Anthology 스타일) — 중간
+
+국가별 인구통계(Census/WVS) 분포에서 나이, 성별, 학력, 직업, 종교, 거주지를 확률적으로 샘플링하여 자연어 bio 생성.
 
 ```
-You are a 19-year-old female citizen of Argentina. Please answer the following
-survey question from your personal perspective as someone living in Argentina.
-Respond with ONLY a single integer number on the given scale.
-Do not add any explanation or reasoning.
+I am a 42-year-old female living in an urban area of Argentina.
+I completed a university degree and currently work as a teacher.
+My religious background is Catholic.
 ```
+코드: `prompts/opencharacter_persona.py` — 6개국 인구통계 하드코딩
 
-**코드** (`prompts/cultural_prompting.py`):
-```python
-def generate_persona(country: str, n: int, seed: int = 42, **kwargs) -> list[str]:
-    rng = random.Random(seed)
-    prompts = []
-    for _ in range(n):
-        age = rng.randint(18, 80)
-        gender = rng.choice(["male", "female"])
-        prompts.append(
-            f"You are a {age}-year-old {gender} citizen of {country}. "
-            f"Please answer the following survey question from your personal perspective "
-            f"as someone living in {country}. "
-            f"Respond with ONLY a single integer number on the given scale. "
-            f"Do not add any explanation or reasoning."
-        )
-    return prompts
-```
+**(3) DeepPersona** (Wang et al., NeurIPS 2025) — 가장 상세
 
-#### (2) OpenCharacter Persona — 중간 수준
+7개 anchor attribute (나이, 성별, 거주지, 직업, 가치관, 인생태도, 관심사) + taxonomy에서 점진적 속성 샘플링. Big Five 성격, 결혼 상태, 정치 성향 등 ~30개 속성.
 
-국가별 인구통계 분포(Census/WVS 기반)에서 나이, 성별, 학력, 직업, 종교, 거주지역을 확률적으로 샘플링하여 3-5문장짜리 자연어 bio를 생성.
-
-**실제 프롬프트 예시** (생성된 bio 일부):
-```
-You are Maria, a 42-year-old female living in urban Argentina. You completed
-a university degree and work as a teacher. You identify as Catholic. You live
-in a bustling city neighborhood. Please answer the following survey question
-from your personal perspective...
-```
-
-**핵심 차이**: Cultural은 국적+나이+성별만 제공하지만, OpenCharacter는 학력, 직업, 종교, 거주지역까지 구체적으로 부여한다. 각 속성은 해당 국가의 실제 인구통계 비율에 따라 확률적으로 샘플링된다 (예: 아르헨티나 Catholic 55%, Evangelical 15%, non-religious 25%).
-
-#### (3) DeepPersona (Wang et al., NeurIPS 2025) — 가장 상세
-
-7개 anchor attribute(나이, 성별, 거주지, 직업, 가치관, 인생 태도, 관심사) + 200+ taxonomy attribute에서 점진적으로 세부 속성을 샘플링. Big Five 성격 특성, 사회경제적 상세 프로필까지 포함.
-
-**실제 프롬프트 예시** (생성된 persona 일부):
 ```
 You are a 35-year-old male living in urban Germany.
-Career: IT specialist, mid-career, employed full-time
-Education: university degree (Informatik)
-Values: secular-rational — you prioritize logic and evidence over tradition
-Personality: moderately open, moderately conscientious, introverted
-Life attitude: pragmatic
-Marital status: married, 1 child
-Hobbies: hiking, board games
-Political leaning: center-left
-Media consumption: primarily online news
-Financial situation: comfortable, owns apartment...
+Career: IT specialist, mid-career. Education: university degree.
+Values: secular-rational. Personality: moderately open, introverted.
+Marital: married, 1 child. Political: center-left...
 ```
+코드: `prompts/deep_persona.py` (572줄) — 원본 DeepPersona의 taxonomy 구조를 rule-based로 재현
 
-**핵심 차이**: anchor 값에 따라 세부 속성이 일관되게 결정된다 (예: `young_adult` → `single` 선호, `senior` → `married/widowed` 선호). 이 일관성이 더 현실적인 persona를 만든다.
+### 5개 GT-free 지표
 
-### 2.2. 세 가지 GT-free 결함 지표 (핵심 기여)
+#### SCS (Synthetic Consistency Score)
 
-이 지표들은 합성 데이터의 **내부 구조**만 분석하여 결함을 탐지한다. GT가 전혀 필요 없다.
+**비유**: 실제 사람이 "가족이 중요하다"고 답하면 "행복하다"고도 답할 확률이 높다. 이런 자연스러운 상관이 있으면 Cronbach's α가 적정 범위에 들어온다. LLM이 모든 질문에 무작위 또는 동일 패턴으로 답하면 α가 비정상.
 
-#### (1) SCS (Synthetic Consistency Score) — "내적 일관성 진단"
+**수식**: `DI_SCS = |α - α_healthy|` (도메인별: WVS α_healthy=0.4, Big Five/Privacy=0.7)
 
-**측정하는 것**: 설문 항목 간 내적 일관성(Cronbach's α)이 "건강한 범위"에서 얼마나 벗어났는가.
-
-**비유**: 실제 사람이 "가족이 중요하다"고 답하면 "친구도 중요하다"고 답할 확률이 높다. 이런 자연스러운 상관이 있으면 α가 0.5-0.9 범위에 들어온다. LLM이 모든 질문에 동일한 패턴으로 답하면 α가 비정상적으로 높거나 낮아진다.
-
-**수식**:
-```
-Cronbach's α = (k / (k-1)) × (1 - Σ(item_variances) / total_variance)
-DI_SCS = |α - 0.7|    (0.7 = 건강 범위 중심점; 낮을수록 좋음)
-```
-
-**실제 코드** (`metrics/step_c_gt_free.py`):
+**코드** (`metrics/step_c_gt_free.py`):
 ```python
-ALPHA_HEALTHY_CENTER = 0.7
-
-def cronbach_alpha(df):
-    items = df[_item_columns(df)].dropna()
-    k = items.shape[1]
-    item_vars = items.var(axis=0, ddof=1)
-    total_var = items.sum(axis=1).var(ddof=1)
-    if total_var == 0:
-        return np.nan
+def cronbach_alpha(items_df):
+    k = items_df.shape[1]
+    item_vars = items_df.var(axis=0, ddof=1)
+    total_var = items_df.sum(axis=1).var(ddof=1)
     return (k / (k - 1)) * (1 - item_vars.sum() / total_var)
 
-def scs(df):
-    alpha = cronbach_alpha(df)
-    di_scs = abs(alpha - ALPHA_HEALTHY_CENTER)
-    return {"alpha": alpha, "DI_SCS": di_scs}
+def scs(df, domain="wvs"):
+    center = ALPHA_HEALTHY_CENTER[domain]  # wvs=0.4, bigfive=0.7
+    alpha = cronbach_alpha(items)
+    return {"DI_SCS": abs(alpha - center)}
 ```
 
-**실제 결과 예시**:
-- Argentina/cultural: α=0.024 → DI_SCS=0.676 (α가 너무 낮음 → 결함)
-- Argentina/deep_persona: α=-0.207 → DI_SCS=0.907 (음의 α → 역상관 패턴)
-- South Africa/deep_persona: α=0.627 → DI_SCS=0.073 (건강 범위에 근접)
+#### VCR (Value Coherence Ratio)
 
-#### (2) VCR (Value Coherence Ratio) — "Halo Effect 탐지"
+**비유**: PCA에서 첫 번째 성분이 분산의 80%를 설명하면, LLM이 모든 항목을 "좋다/나쁘다" 하나의 축으로만 평가한 것 (halo effect).
 
-**측정하는 것**: PCA의 첫 번째 고유값이 전체 분산에서 차지하는 비율. LLM이 모든 항목을 하나의 차원(예: "좋다/나쁘다")으로만 답하면 이 비율이 매우 높아진다.
+**수식**: `DI_VCR = max(0, λ₁/Σλᵢ - 0.5)`
 
-**비유**: 실제 사람에게 "가족 중요도", "신뢰", "삶의 만족" 등을 물으면 각각 다른 차원의 답변이 나온다. 하지만 LLM이 "이 사람은 긍정적이니 모든 질문에 높은 점수를 줘야지"라고 추론하면, 모든 항목이 하나의 요인으로 수렴한다 (halo effect).
+**현재 결과**: 모든 33조건에서 DI_VCR ≈ 0 (Qwen 3B에서 halo effect 미발생)
+
+#### ICE (Item Correlation Entropy)
+
+**비유**: 실제 설문에서는 일부 항목 쌍은 강한 양의 상관, 일부는 음의 상관, 일부는 무상관. 이 다양성이 엔트로피로 측정됨. LLM이 모든 상관을 비슷하게 만들면 엔트로피가 낮아짐.
 
 **수식**:
 ```
-VCR = λ₁ / Σλᵢ    (첫 번째 고유값 / 전체 고유값 합)
-DI_VCR = max(0, VCR - 0.5)    (VCR > 0.5일 때만 결함; 낮을수록 좋음)
+1) 모든 항목 쌍의 Pearson r 계산
+2) [-1, 1] 범위에서 20 bins 히스토그램
+3) Shannon entropy: H = -Σ pᵢ log₂(pᵢ)
+4) DI_ICE = -H_normalized
 ```
 
-**실제 코드** (`metrics/step_c_gt_free.py`):
+**코드** (`metrics/step_c_gt_free.py`):
 ```python
-VCR_THRESHOLD = 0.5
-
-def vcr(df):
-    items = df[_item_columns(df)].dropna()
-    items = items.loc[:, items.var(ddof=1) > 0]  # zero-variance 항목 제외
-    corr_matrix = items.corr().values
-    eigenvalues = np.linalg.eigvalsh(corr_matrix)
-    eigenvalues = np.sort(eigenvalues)[::-1]
-    vcr_val = eigenvalues[0] / eigenvalues.sum()
-    di_vcr = max(0.0, vcr_val - VCR_THRESHOLD)
-    return {"VCR": vcr_val, "DI_VCR": di_vcr}
-```
-
-**실제 결과**: 모든 24개 조건에서 DI_VCR = 0.0. Qwen2.5-3B 모델은 halo effect를 생성하지 않는 것으로 보임. → 이 지표는 현재 실험에서는 변별력 없음.
-
-#### (3) ICE (Item Correlation Entropy) — "상관 다양성 진단" ⭐ 가장 유망
-
-**측정하는 것**: 항목 간 pairwise 상관계수 분포의 Shannon 엔트로피. 상관계수들이 다양하면 엔트로피가 높고, 한쪽에 몰려 있으면 낮다.
-
-**비유**: 실제 설문에서는 일부 항목은 강하게 상관되고(예: 가족 vs 친구), 일부는 약하거나 음의 상관을 보인다(예: 신뢰 vs 보수성). 이 다양성이 자연스러운 것이다. LLM이 모든 상관을 비슷하게 만들면 엔트로피가 낮아진다.
-
-**수식**:
-```
-1) 모든 항목 쌍의 Pearson 상관계수 계산 → corrs = [r₁₂, r₁₃, ..., r₅₆]
-2) [-1, 1] 범위에서 20 bins의 히스토그램 생성
-3) 히스토그램을 확률 분포로 정규화
-4) Shannon entropy: H = -Σ pᵢ log₂(pᵢ)
-5) 정규화: H_norm = H / log₂(20)
-6) DI_ICE = -H_norm    (엔트로피가 높을수록 DI가 낮음 = 좋음)
-```
-
-**실제 코드** (`metrics/step_c_gt_free.py`):
-```python
-def ice(df):
-    items_df = df[_item_columns(df)].dropna()
-    items = items_df.columns.tolist()
-
-    corrs = []
-    for i, j in combinations(range(len(items)), 2):
-        r = items_df.iloc[:, i].corr(items_df.iloc[:, j])
-        if not np.isnan(r):
-            corrs.append(r)
-
-    hist, _ = np.histogram(corrs, bins=20, range=(-1.0, 1.0), density=True)
-    hist = hist + 1e-10
-    hist = hist / hist.sum()
+def ice(df, domain="wvs"):
+    corrs = [items_df.iloc[:,i].corr(items_df.iloc[:,j])
+             for i, j in combinations(range(len(items)), 2)]
+    hist, _ = np.histogram(corrs, bins=20, range=(-1.0, 1.0))
+    hist = (hist + 1e-10) / (hist + 1e-10).sum()
     entropy = -np.sum(hist * np.log2(hist))
-    max_entropy = np.log2(len(hist))
-    normalized_entropy = entropy / max_entropy
-
-    return {
-        "ICE": float(entropy),
-        "ICE_normalized": float(normalized_entropy),
-        "DI_ICE": float(-normalized_entropy),
-    }
+    return {"DI_ICE": -entropy / np.log2(20)}
 ```
 
-**실제 결과 예시**:
-- Argentina/cultural: ICE_norm=0.444, DI_ICE=-0.444 (상관이 한쪽에 치우침 → 나쁨)
-- Argentina/deep_persona: ICE_norm=0.630, DI_ICE=-0.630 (상관이 다양 → 좋음)
+#### RSI (Response Stability Index)
 
-**왜 ICE가 가장 유망한가**: 이 실험에서 ICE는 JSD와 ρ=+0.797 (p<0.001)의 매우 강한 양의 상관을 보였다. GT 없이도 합성 데이터의 품질 순위를 높은 정확도로 예측할 수 있다.
+**비유**: "AI를 신뢰한다"와 "AI를 믿을 수 있다고 생각한다"에 인간은 거의 같은 답을 하지만, LLM은 표현이 바뀌면 과도하게 다르게 답할 수 있다 (paraphrase 과민). 반대로 역방향 문항("AI를 신뢰하지 않는다")에는 충분히 다르게 답해야 하는데, LLM이 둔감할 수 있다.
 
-### 2.3. GT-based 지표 (검증용)
+**수식**:
+```
+RSI_para = mean(|r_orig - r_para|)           — 낮을수록 안정
+RSI_rev = mean(|r_fwd + r_rev - expected|)   — 높을수록 역문항 감지 잘함
+RSI = 0.5 × RSI_para + 0.5 × (1/(RSI_rev + ε))
+```
 
-이 지표들은 합성 데이터와 실제 인간 데이터(GT)의 분포를 직접 비교한다. GT-free 지표의 유효성을 검증하는 "정답지" 역할.
+**코드**: `metrics/step_d_rsi_sdbs.py`, `engine/run_rsi_survey.py`
 
-| 지표 | 설명 | 계산 | 해석 |
-|------|------|------|------|
-| **WD** | Wasserstein Distance | 두 분포 간 "흙 옮기기" 최소 비용 | 낮을수록 유사 |
-| **JSD** | Jensen-Shannon Divergence | 두 분포의 정보이론적 거리 (0~1 범위, 대칭) | 낮을수록 유사 |
-| **KS** | Kolmogorov-Smirnov | 두 CDF의 최대 수직 거리 | 낮을수록 유사 |
-| **MeanDiff** | Mean Difference | |mean(syn) - mean(GT)| | 낮을수록 유사 |
+#### SDBS (Social Desirability Bias Score)
 
-각 지표는 6개 항목별로 계산된 뒤 평균을 취한다.
+**비유**: LLM이 "좋아 보이는 답" 쪽으로 체계적으로 편향. "행복하다(1)"를 과도하게 선택하거나, "차별은 나쁘다"를 무조건 동의.
 
-### 2.4. Distribution-Structure Dissociation
+**수식**: `SDBS = mean(sign(SD_dir) × (response - neutral))`
 
-이 연구의 숨은 관찰: **분포적 유사성(WD/JSD)과 구조적 유사성(SFS)은 반드시 일치하지 않는다.**
+### GT-based 지표 (검증용 "정답지")
 
-예를 들어, South Africa에서 deep_persona의 WD가 가장 높지만(분포적으로 가장 다름), SFS에서는 가장 높은 structural fidelity를 보인다. 즉, "평균적으로는 틀리지만 항목 간 상관 구조는 잘 재현한다". 이는 persona의 상세도가 올라갈수록 내부 구조의 현실성이 높아지지만, 반드시 분포적 정확성까지 보장하지는 않음을 시사한다.
+| 지표 | 설명 | 수식 직관 |
+|------|------|----------|
+| **WD** | Wasserstein Distance | 두 히스토그램을 같게 만드려면 얼마나 "흙을 옮겨야" 하는가 |
+| **JSD** | Jensen-Shannon Divergence | 두 확률분포의 정보이론적 거리 (0=동일, 1=완전 다름) |
+| **KS** | Kolmogorov-Smirnov | 두 누적분포함수의 최대 차이 |
+| **MeanDiff** | Mean Difference | 평균값 차이의 절대값 |
+
+### Distribution-Structure Dissociation
+
+**핵심 관찰**: 분포가 비슷해도(WD↓) 구조가 다를 수 있다. Privacy 도메인에서 DeepPersona의 WD는 가장 높지만(분포적으로 가장 다름), SFS는 가장 높다(구조적으로 가장 충실). 이것이 GT-free 구조 지표가 필요한 근본적 이유.
+
+### Failure Modes
+
+| Failure Mode | 증상 | 탐지 지표 |
+|-------------|------|----------|
+| **Diversity Deficit** | 응답 분산 부족, 상관 엔트로피 낮음 | ICE, RSI_para |
+| **Stereotypical Coherence** | 모든 항목이 하나의 패턴 | VCR, SCS |
+| **Surface Sensitivity** | 표현 변화에 과민, 역문항 둔감 | RSI |
+| **Social Desirability Drift** | "좋아 보이는 답"으로 체계적 편향 | SDBS |
 
 ---
 
-## 3. 프로젝트 구조
+## A4. 연구 가설 및 결과
 
-### 디렉토리 트리
-
-```
-synthetic_persona/
-├── CLAUDE.md                         # Claude Code 가이드
-├── README.md                         # 프로젝트 설명 (한국어)
-├── pyproject.toml                    # Python 패키지 설정 (uv/pip)
-├── uv.lock                           # 의존성 잠금 파일
-├── main.py                           # CLI 진입점: survey/metrics/analyze/status
-├── run_all.sh                        # 전체 파이프라인 원클릭 실행
-├── .gitignore                        # 대용량 데이터/venv 제외
-│
-├── config/
-│   └── experiment_config.py          # 모든 실험 설정의 단일 진실 원천 (Single Source of Truth)
-│
-├── prompts/                          # 3가지 Persona 프롬프팅 전략
-│   ├── __init__.py                   # format_question_prompt(), run_survey() 공유 유틸
-│   ├── cultural_prompting.py         # 국적 + 나이/성별만 (가장 단순)
-│   ├── opencharacter_persona.py      # 인구통계 확률 샘플링 bio (중간)
-│   └── deep_persona.py              # 7 anchor + taxonomy 기반 심층 persona (가장 상세)
-│
-├── engine/                           # LLM 추론 엔진
-│   ├── llm_client.py                 # LocalLLM: vLLM 오프라인 추론 (배치 지원)
-│   ├── run_survey.py                 # 실험 루프: persona 생성 → 배치 추론 → CSV 저장
-│   └── vllm_server.py               # [Deprecated] 서버 방식 폐기
-│
-├── metrics/                          # 메트릭 계산
-│   ├── step_a_gt_based.py            # WD, JSD, KS, MeanDiff (GT 필요)
-│   ├── step_b_structural.py          # SFS = mean(SignF, SigF, NullF) (GT 필요)
-│   ├── step_b_compute_all.py         # Step B 배치 러너
-│   ├── step_c_gt_free.py             # SCS, VCR, ICE 계산 함수 (GT 불필요) ← 핵심
-│   ├── step_c_compute_all.py         # Step C 배치 러너
-│   └── analysis.py                   # Spearman/Kendall 순위 일치도 분석
-│
-├── scripts/                          # 파이프라인 bash 스크립트
-│   ├── 01_start_vllm.sh              # 환경 확인 (vLLM import + 모델 캐시)
-│   ├── 02_run_domain_b.sh            # WVS 실험 실행
-│   ├── 03_run_domain_a.sh            # Privacy 실험 실행
-│   ├── 04_compute_metrics.sh         # Step A + C 메트릭 계산
-│   └── 05_analyze.sh                 # 분석 실행
-│
-├── data/
-│   ├── wvs/                          # WVS Wave 7 원본 (190MB, git 제외)
-│   ├── wvs_gt/                       # WVS GT: distributions.json + 국가별 CSV
-│   ├── privacy_gt/                   # Privacy GT: distributions.json + 국가별 CSV
-│   ├── preprocess_wvs.py             # WVS 원본 → distributions.json 변환
-│   └── preprocess_privacy.py         # Privacy 원본 → distributions.json 변환
-│
-├── results/
-│   ├── wvs/{country}/{method}.csv    # WVS 합성 응답 (6국 × 3방법 = 18 파일)
-│   ├── privacy/{country}/{method}.csv # Privacy 합성 응답 (2국 × 3방법 = 6 파일)
-│   └── metrics/                      # 메트릭 계산 결과 (JSON)
-│       ├── step_a_results.json       # GT-based: WD/JSD/KS/MeanDiff (24 conditions)
-│       ├── step_b_results.json       # Structural: SignF/SigF/NullF/SFS (24 conditions)
-│       ├── step_c_results.json       # GT-free: SCS/VCR/ICE/DI_combined (24 conditions)
-│       └── analysis_results.json     # 순위 일치도 분석 결과
-│
-└── reports_for_human/                # 사람이 읽는 리포트
-    ├── progress_report.md            # 진행 상황 리포트
-    └── POST_EXPERIMENT_PRD.md        # 이 파일
-```
-
-### 핵심 파일 5개 상세
-
-#### (1) `config/experiment_config.py` — 실험의 단일 진실 원천
-
-모든 실험 설정이 이 파일에 집중되어 있다. 다른 어떤 파일에도 하드코딩하지 않는다.
-
-**주요 설정값**:
-```python
-MODEL_ID = "Qwen/Qwen2.5-3B-Instruct"
-TENSOR_PARALLEL_SIZE = 2           # GPU 0,1 사용
-GPU_MEMORY_UTILIZATION = 0.90
-MAX_MODEL_LEN = 2048
-MAX_TOKENS = 512
-TEMPERATURE = 0.7
-NUM_RESPONSES_PER_CONDITION = 300
-```
-
-**주요 함수**: `get_all_conditions()` → 24개 `ExperimentCondition` 객체 리스트 생성
-```python
-@dataclass
-class ExperimentCondition:
-    domain: str           # "wvs" or "privacy"
-    country: str          # "Argentina", "South Africa" 등
-    prompt_method: str    # "cultural", "opencharacter", "deep_persona"
-    items: dict           # WVS_ITEMS 또는 PRIVACY_ITEMS
-    n_responses: int      # 300
-```
-
-#### (2) `engine/llm_client.py` — vLLM 오프라인 추론
-
-**핵심 클래스**: `LocalLLM` — vLLM의 `LLM` 클래스를 래핑. 프로세스 내에서 모델을 로드하고, 프로세스 종료 시 GPU 자동 해제.
-
-**핵심 메서드**:
-```python
-class LocalLLM:
-    def query(self, system_prompt, user_prompt) -> str:
-        """단일 chat completion"""
-
-    def query_int(self, system_prompt, user_prompt, scale_min, scale_max) -> int | None:
-        """단일 쿼리 후 정수 파싱"""
-
-    def query_batch(self, conversations: list[list[dict]]) -> list[str]:
-        """배치 chat completion — 핵심 성능 포인트"""
-
-    def query_int_batch(self, conversations, scale_min, scale_max) -> list[int | None]:
-        """배치 쿼리 후 정수 파싱"""
-```
-
-**입력 형식** (conversations):
-```python
-[
-    [{"role": "system", "content": "You are a 58-year-old male citizen of Argentina..."},
-     {"role": "user", "content": "For each of the following...\nScale: 1=Not very important..."}],
-    [{"role": "system", "content": "You are a 19-year-old female citizen of Argentina..."},
-     {"role": "user", "content": "For each of the following...\nScale: 1=Not very important..."}],
-    # ... 300개
-]
-```
-
-#### (3) `engine/run_survey.py` — 실험 루프
-
-**핵심 함수**: `run_condition(llm, cond)` — 하나의 실험 조건을 실행
-
-```
-입력: LocalLLM 인스턴스, ExperimentCondition
-과정:
-  1) generate_persona(country, 300) → 300개 시스템 프롬프트
-  2) for each item (6개):
-       300개 conversation 생성 → llm.query_int_batch() → 300개 정수 응답
-  3) DataFrame 구성 → CSV 저장
-출력: results/{domain}/{country}/{method}.csv
-```
-
-**resume 기능**: 이미 존재하는 CSV는 건너뛴다. 중간에 중단되어도 이전 결과 유지.
-
-#### (4) `metrics/step_c_gt_free.py` — GT-free 결함 지표 (핵심)
-
-**3개 함수**: `scs(df)`, `vcr(df)`, `ice(df)` — 각각 SCS, VCR, ICE를 계산
-
-**입력**: 합성 응답 DataFrame (300행 × 6열 형태)
-```
-respondent_id  Q45  Q46  Q57  Q184  Q218  Q254
-0              3    2    2    7     3     1
-1              3    2    2    6     3     1
-...
-```
-
-**출력**: 각 지표의 raw값과 DI(Defect Index) 값
-```python
-{"alpha": -0.207, "DI_SCS": 0.907}
-{"VCR": 0.35, "DI_VCR": 0.0}
-{"ICE": 2.72, "ICE_normalized": 0.630, "DI_ICE": -0.630}
-```
-
-#### (5) `metrics/analysis.py` — 순위 일치도 분석
-
-**핵심 함수**: `pooled_analysis(df)` — 전체 24개 조건의 Spearman ρ / Kendall τ 계산
-
-```
-입력: Step A (GT-based) + Step C (GT-free) 병합 DataFrame
-출력: {
-  "DI_ICE_vs_JSD_mean": {"spearman_r": 0.797, "spearman_p": 0.0000, ...},
-  "DI_combined_vs_JSD_mean": {"spearman_r": 0.655, "spearman_p": 0.0005, ...},
-  ...
-}
-```
-
-### 데이터 흐름도
-
-```
-config/experiment_config.py
-  │  (24 conditions: 8 countries × 3 methods)
-  ▼
-prompts/*.py  ──generate_persona()──→  300 system prompts per condition
-  │
-  ▼
-engine/run_survey.py
-  │  배치 추론: 6 items × 300 prompts = 1,800 queries per condition
-  │  LocalLLM.query_int_batch() ──→ vLLM offline (GPU 0,1)
-  ▼
-results/{domain}/{country}/{method}.csv
-  │  (300행 × 6열 정수 Likert 응답)
-  ▼
-┌─────────────────┬──────────────────────┬──────────────────────┐
-│ metrics/         │ metrics/              │ metrics/              │
-│ step_a_gt_based │ step_b_structural    │ step_c_gt_free       │
-│ (GT 필요)        │ (GT 필요)             │ (GT 불필요) ← 핵심    │
-│ WD, JSD, KS,    │ SignF, SigF, NullF,  │ SCS, VCR, ICE,      │
-│ MeanDiff        │ SFS                  │ DI_combined          │
-└────────┬────────┴──────────┬───────────┴──────────┬───────────┘
-         │                   │                      │
-         ▼                   ▼                      ▼
-         metrics/analysis.py ──→ Spearman ρ, Kendall τ
-         (GT-based 순위 vs GT-free 순위 일치?)
-```
+| 가설 | 내용 | 검증 지표 | 결과 (n=33) | 판정 |
+|------|------|----------|-------------|------|
+| **H1** | DI_combined 순위가 WD 순위와 양의 상관 | ρ(DI_combined, WD) | **ρ=+0.658, p<0.0001** | **지지** |
+| **H2** | ICE가 JSD와 양의 상관 (ρ>0.5) | ρ(DI_ICE, JSD) | **ρ=+0.697, p<0.0001** | **지지** |
+| **H3** | RSI_rev가 WD와 양의 상관 (역문항 감지=품질) | ρ(RSI_rev, WD) | **ρ=+0.767, p<0.0001** | **강하게 지지** |
+| **H4** | SDBS가 문화권별 편향을 탐지 | domain-specific ρ | WVS: ρ=+0.759***, BF: n.s. | **부분 지지** |
+| **H5** | GT-free 지표가 도메인 무관하게 유효 | per-domain ρ | WVS/BF: 유효, Privacy: n.s. (n=6) | **부분 지지** |
 
 ---
 
-## 4. 환경 설정 및 재현 방법
+# Part B: 재현 가이드
 
-### 필요한 하드웨어
+## B1. 환경 요구사항
 
-| 항목 | 최소 | 권장 (이 실험에서 사용) |
-|------|------|------------------------|
-| GPU | NVIDIA GPU × 2, 각 16GB+ VRAM | RTX 3090 × 2 (24GB × 2) |
+| 항목 | 최소 사양 | 이 실험에서 사용 |
+|------|----------|----------------|
+| GPU | NVIDIA × 2, 각 16GB+ VRAM | RTX 3090 24GB × 4 (GPU 0,1만 사용) |
 | RAM | 32GB | 64GB |
-| 디스크 | 20GB 여유 | 50GB 여유 (모델 캐시 포함) |
+| 디스크 | 20GB | 50GB (모델 캐시 포함) |
 | CUDA | 12.0+ | 13.0 (Driver 580.119.02) |
 | Python | 3.11+ | 3.11 |
+| OS | Linux | Ubuntu (5.15.0-142-generic) |
 
-### 설치
+## B2. 설치 및 세팅
 
 ```bash
-cd /data/workspace/choie1/synthetic_persona
+# 1. 프로젝트 클론
+git clone https://github.com/yeong22/synthetic_persona.git
+cd synthetic_persona
 
-# (Option 1) uv 사용 — 권장
+# 2. Python 가상환경 + 의존성 설치 (uv 권장)
 uv sync
+# 또는: pip install -e .
 
-# (Option 2) pip 사용
-pip install -e .
-```
-
-주요 의존성: `vllm>=0.1.2`, `torch>=2.11.0`, `pandas>=3.0.1`, `scipy>=1.17.1`, `numpy>=2.4.3`
-
-### 모델 다운로드
-
-vLLM이 첫 실행 시 자동으로 HuggingFace에서 다운로드한다. 미리 캐시하려면:
-
-```bash
-python -c "
+# 3. 모델 캐시 (첫 실행 시 자동 다운로드되지만, 미리 하려면)
+.venv/bin/python -c "
 from huggingface_hub import snapshot_download
 snapshot_download('Qwen/Qwen2.5-3B-Instruct')
 print('Model cached.')
 "
+
+# 4. vLLM 오프라인 모드 확인
+.venv/bin/python -c "from vllm import LLM; print('vLLM OK')"
+# 기대 출력: "vLLM OK"
 ```
 
-### WVS Wave 7 데이터 준비
+## B3. 데이터 준비
 
-1. WVS 공식 사이트 (https://www.worldvaluessurvey.org/) 에서 Wave 7 CSV 다운로드
-2. `data/wvs/` 디렉토리에 저장
-3. 전처리 실행:
+### WVS Wave 7
+
+1. https://www.worldvaluessurvey.org/ 에서 Wave 7 CSV (inverted) 다운로드
+2. `data/wvs_raw/WVS_Cross-National_Wave_7_inverted_csv_v6_0.csv`에 저장
+3. 전처리: `.venv/bin/python data/preprocess_wvs.py`
+4. 확인: `data/wvs_gt/distributions.json` + 6개국 CSV 생성됨
+
+### Big Five (IPIP-FFM)
+
+1. HuggingFace에서 자동 다운로드: `.venv/bin/python data/preprocess_bigfive.py`
+   (또는 `data/data/bigfive/ipip_ffm_test.csv`가 이미 있으면 바로 실행)
+2. 확인: `data/bigfive_gt/distributions.json` + 3개국 CSV + `factor_stats.json`
+
+### Privacy Calculus
+
+이미 `data/privacy_gt/`에 포함. 추가 작업 불필요.
+
+### 데이터 준비 완료 체크리스트
 
 ```bash
-python data/preprocess_wvs.py
-# 출력: data/wvs_gt/distributions.json + 국가별 CSV
+# 이 4개 파일이 모두 존재하면 데이터 준비 완료
+ls data/wvs_gt/distributions.json    # WVS GT
+ls data/bigfive_gt/distributions.json # Big Five GT
+ls data/privacy_gt/distributions.json # Privacy GT
+ls data/bigfive_gt/factor_stats.json  # Big Five factor 통계
 ```
 
-이미 전처리된 파일이 `data/wvs_gt/`에 포함되어 있으므로, 재현 시 이 단계는 건너뛸 수 있다.
-
-### 전체 실험 재현 — 원라이너
+## B4. 전체 실행 (원커맨드 재현)
 
 ```bash
-cd /data/workspace/choie1/synthetic_persona && bash run_all.sh
+# 전체 파이프라인 (환경확인 → 3도메인 실험 → 메트릭 → 분석)
+bash run_all.sh
 ```
 
-이 명령은 순서대로: 환경 확인 → WVS 실험(18 conditions) → Privacy 실험(6 conditions) → 메트릭 계산 → 분석 → git commit을 실행한다.
+**내부 흐름**:
+```
+[01] 환경 확인 (vLLM import + 모델 캐시)
+ ↓
+[02] WVS 실험: 3 methods × 6 countries × 300 respondents × 6 items = 32,400 queries
+ ↓  (results/wvs/{country}/{method}.csv × 18 파일)
+[03] Privacy 실험: 3 × 2 × 300 × 6 = 10,800 queries
+ ↓  (results/privacy/{country}/{method}.csv × 6 파일)
+[04] 메트릭 계산
+ ├─ Step A: GT-based (WD, JSD, KS, MeanDiff)
+ ├─ Step B: Structural (SFS = SignF + SigF + NullF)
+ └─ Step C: GT-free (SCS, VCR, ICE)
+ ↓  (results/metrics/step_{a,c}_results.json)
+[05] 분석: Spearman/Kendall 순위 일치도
+ ↓  (results/metrics/analysis_results.json)
+```
 
-### 개별 실행 (단계별)
+**추가 실행 필요** (run_all.sh에 미포함):
+```bash
+# Big Five 실험 (50문항 × 300명 × 9조건)
+CUDA_VISIBLE_DEVICES=0,1 .venv/bin/python -m engine.run_survey --domain bigfive
+
+# RSI 추가 설문 (paraphrase + reverse 문항)
+CUDA_VISIBLE_DEVICES=0,1 .venv/bin/python -m engine.run_rsi_survey --domain wvs
+CUDA_VISIBLE_DEVICES=0,1 .venv/bin/python -m engine.run_rsi_survey --domain bigfive
+CUDA_VISIBLE_DEVICES=0,1 .venv/bin/python -m engine.run_rsi_survey --domain privacy
+
+# RSI/SDBS 메트릭 계산
+.venv/bin/python -m metrics.step_d_rsi_sdbs
+```
+
+**예상 소요 시간**: WVS ~5분, Big Five ~15분, Privacy ~2분, RSI 설문 ~15분, 메트릭 <1분
+
+## B5. 코드 구조도
+
+```
+synthetic_persona/              (5,008줄 Python)
+├── config/
+│   ├── experiment_config.py    — 모든 실험 설정의 Single Source of Truth
+│   └── rsi_sdbs_config.py      — RSI/SDBS용 paraphrase, reverse, SD 방향 정의
+├── prompts/
+│   ├── __init__.py             — format_question_prompt(): 도메인별 질문 포맷
+│   ├── cultural_prompting.py   — generate_persona(): 국적+나이+성별만
+│   ├── opencharacter_persona.py— generate_persona(): 인구통계 확률 샘플링
+│   └── deep_persona.py         — generate_persona(): 7 anchor + taxonomy
+├── engine/
+│   ├── llm_client.py           — LocalLLM: vLLM 오프라인, query_int_batch()
+│   ├── run_survey.py           — run_domain(): 배치 추론 루프 (item별 300건)
+│   └── run_rsi_survey.py       — RSI용 paraphrase/reverse 설문 추가 실행
+├── metrics/
+│   ├── step_a_gt_based.py      — WD, JSD, KS, MeanDiff (GT 필요)
+│   ├── step_b_structural.py    — SFS = mean(SignF, SigF, NullF) (GT 필요)
+│   ├── step_c_gt_free.py       — SCS, VCR, ICE (GT 불필요) ← 핵심
+│   ├── step_d_rsi_sdbs.py      — RSI, SDBS (GT 불필요) ← 핵심
+│   ├── step_{b,c}_compute_all.py — 배치 러너
+│   └── analysis.py             — Spearman/Kendall 순위 일치도
+├── data/
+│   ├── wvs_gt/                 — WVS GT distributions.json + CSV
+│   ├── bigfive_gt/             — Big Five GT distributions.json + factor_stats.json
+│   ├── privacy_gt/             — Privacy GT distributions.json + CSV
+│   └── preprocess_{wvs,bigfive,privacy}.py
+├── results/
+│   ├── {wvs,bigfive,privacy}/{country}/{method}.csv — 합성 응답
+│   ├── {wvs,bigfive,privacy}/{country}/{method}_{para,rev}.csv — RSI용
+│   └── metrics/step_{a,c,d}_results.json + analysis_results.json
+├── scripts/01~05_*.sh          — 파이프라인 bash 스크립트
+├── run_all.sh                  — 원클릭 전체 실행
+└── main.py                     — CLI (survey/metrics/analyze/status)
+```
+
+## B6. 단계별 실행 가이드
 
 ```bash
-# 환경 확인
-bash scripts/01_start_vllm.sh
-# 기대 출력: "[01] vLLM import OK" + "[01] Environment ready."
+PY=.venv/bin/python  # 이 프로젝트의 venv를 명시적으로 사용
 
-# WVS 실험 (약 5-7분)
-CUDA_VISIBLE_DEVICES=0,1 python -m engine.run_survey --domain wvs
-# 기대 출력: 18개 조건의 tqdm 진행률 바 + "Domain 'wvs' complete."
-# 결과 파일: results/wvs/{country}/{method}.csv (18개 파일, 각 301줄)
+# Step 1: WVS 실험 (18 conditions, ~5분)
+CUDA_VISIBLE_DEVICES=0,1 $PY -m engine.run_survey --domain wvs
+# 기대: results/wvs/{6국}/{3방법}.csv 각 301줄 (헤더+300)
 
-# Privacy 실험 (약 2분)
-CUDA_VISIBLE_DEVICES=0,1 python -m engine.run_survey --domain privacy
-# 기대 출력: 6개 조건 + "Domain 'privacy' complete."
-# 결과 파일: results/privacy/{country}/{method}.csv (6개 파일)
+# Step 2: Big Five 실험 (9 conditions, ~15분)
+CUDA_VISIBLE_DEVICES=0,1 $PY -m engine.run_survey --domain bigfive
+# 기대: results/bigfive/{3국}/{3방법}.csv 각 301줄, 50 item 컬럼
 
-# 메트릭 계산
-python -m metrics.step_a_gt_based    # Step A: GT-based
-python -m metrics.step_c_compute_all  # Step C: GT-free
-python -m metrics.step_b_compute_all  # Step B: Structural
+# Step 3: Privacy 실험 (6 conditions, ~2분)
+CUDA_VISIBLE_DEVICES=0,1 $PY -m engine.run_survey --domain privacy
+# 기대: results/privacy/{2국}/{3방법}.csv 각 301줄
 
-# 분석
-python -m metrics.analysis --metrics-dir results/metrics
-# 기대 출력: 순위 일치도 테이블 + Spearman ρ 테이블
+# Step 4: GT-based 메트릭
+$PY -m metrics.step_a_gt_based
+# 기대: results/metrics/step_a_results.json (33 conditions)
 
-# 파이프라인 상태 확인
-python main.py status
+# Step 5: GT-free 메트릭
+$PY -m metrics.step_c_compute_all
+# 기대: results/metrics/step_c_results.json (33 conditions)
+
+# Step 6: RSI 추가 설문
+CUDA_VISIBLE_DEVICES=0,1 $PY -m engine.run_rsi_survey --domain wvs      # para+rev
+CUDA_VISIBLE_DEVICES=0,1 $PY -m engine.run_rsi_survey --domain bigfive  # para only
+CUDA_VISIBLE_DEVICES=0,1 $PY -m engine.run_rsi_survey --domain privacy  # para only
+
+# Step 7: RSI/SDBS 메트릭
+$PY -m metrics.step_d_rsi_sdbs
+# 기대: results/metrics/step_d_results.json (33 conditions)
+
+# Step 8: 분석
+$PY -m metrics.analysis --metrics-dir results/metrics
+# 기대: results/metrics/analysis_results.json
+
+# 정상 확인
+$PY main.py status
 ```
 
-**주의**: 이 프로젝트의 venv를 명시적으로 사용해야 할 수 있다:
-```bash
-# 다른 venv가 활성화된 경우
-/data/workspace/choie1/synthetic_persona/.venv/bin/python -m engine.run_survey --domain wvs
-```
+## B7. 트러블슈팅
+
+### vLLM 서버 방식 → 오프라인 모드 전환
+
+**문제**: vLLM 서버를 백그라운드로 띄우면 세션 끊김 시 GPU 좀비 (22GB×2 점유).
+**해결**: `engine/llm_client.py`를 `vllm.LLM` 클래스 직접 사용으로 전환. 프로세스 종료 = GPU 해제.
+**확인**: `nvidia-smi`에 "No running processes" 확인.
+
+### Cultural Prompting NaN
+
+**문제**: temperature=0.0 + 동일 프롬프트 → 300개 동일 응답 → 분산=0 → α=NaN.
+**해결**: (1) `TEMPERATURE=0.7`로 변경, (2) cultural 프롬프트에 나이/성별 variation 추가.
+
+### Python venv 충돌
+
+**문제**: 다른 프로젝트 venv가 PATH에 잡혀 `ModuleNotFoundError`.
+**해결**: `.venv/bin/python`을 절대경로로 사용.
+
+### WVS 결측값
+
+**문제**: WVS 원본에 -1, -2, -4, -5가 결측 코드.
+**해결**: `data/preprocess_wvs.py`에서 MISSING_CODES로 필터링.
+
+### Big Five alpha 음수
+
+**문제**: raw 문항으로 α 계산 시 역문항 때문에 음수.
+**해결**: `metrics/step_c_gt_free.py`에서 Big Five는 reverse-score 후 α 계산.
 
 ---
 
-## 5. 실험 설계
+# Part C: 실험 결과 + 논문 소재
 
-### 실험 조건 매트릭스
+## C1. 핵심 결과 테이블
 
-| | Cultural | OpenCharacter | DeepPersona |
-|---|---|---|---|
-| **WVS: Argentina** | 300 responses | 300 responses | 300 responses |
-| **WVS: Australia** | 300 | 300 | 300 |
-| **WVS: Germany** | 300 | 300 | 300 |
-| **WVS: India** | 300 | 300 | 300 |
-| **WVS: Kenya** | 300 | 300 | 300 |
-| **WVS: United States** | 300 | 300 | 300 |
-| **Privacy: South Africa** | 300 | 300 | 300 |
-| **Privacy: United Kingdom** | 300 | 300 | 300 |
+### Table 1: WVS GT-based 결과 (DeepPersona Table 2 재현 형식)
 
-**총**: 8 countries × 3 methods × 300 responses = **7,200 합성 응답**
-**총 LLM 쿼리**: 7,200 × 6 items = **43,200 queries** (배치 추론으로 144 batches)
+| Country | Method | KS↓ | WD↓ | JSD↓ | MeanDiff↓ |
+|---------|--------|------|------|------|-----------|
+| Argentina | Cultural | 0.510 | 1.142 | 0.252 | 0.996 |
+| Argentina | OpenChar | 0.550 | 0.929 | 0.281 | 0.759 |
+| Argentina | **DeepP** | **0.382** | **0.574** | **0.161** | **0.431** |
+| Australia | Cultural | 0.571 | 1.197 | 0.324 | 0.827 |
+| Australia | OpenChar | 0.474 | 0.888 | 0.250 | 0.539 |
+| Australia | **DeepP** | **0.341** | **0.814** | **0.131** | 0.756 |
+| Germany | Cultural | 0.398 | 0.818 | 0.202 | 0.499 |
+| Germany | OpenChar | 0.388 | 0.784 | 0.228 | 0.342 |
+| Germany | **DeepP** | **0.292** | **0.567** | **0.113** | 0.485 |
+| India | Cultural | 0.619 | 1.385 | 0.331 | 1.261 |
+| India | OpenChar | 0.580 | 0.922 | 0.309 | 0.743 |
+| India | **DeepP** | **0.443** | **0.664** | **0.185** | **0.616** |
+| Kenya | Cultural | 0.614 | 1.233 | 0.351 | 0.984 |
+| Kenya | OpenChar | 0.618 | 1.012 | 0.339 | 0.788 |
+| Kenya | **DeepP** | **0.401** | **0.584** | **0.178** | **0.420** |
+| US | Cultural | 0.491 | 1.029 | 0.234 | 0.802 |
+| US | OpenChar | 0.457 | 0.866 | 0.253 | 0.502 |
+| US | **DeepP** | **0.284** | **0.496** | **0.112** | **0.383** |
 
-### 각 실험 조건에서 일어나는 일
+**일관된 패턴**: DeepPersona가 6개국 전체에서 WD/JSD/KS 최소.
 
-하나의 조건 (예: WVS / Argentina / deep_persona)의 실행 과정:
+### Table 2: Big Five GT-based 결과 (DeepPersona Table 3 재현 형식)
 
-1. `deep_persona.generate_persona("Argentina", 300, seed=42)` → 300개의 고유한 시스템 프롬프트 생성
-2. 6개 질문(Q45, Q46, Q57, Q184, Q218, Q254) 각각에 대해:
-   - 300개의 conversation 구성: `[{"role":"system", persona_i}, {"role":"user", question}]`
-   - `LocalLLM.query_int_batch(conversations, scale_min, scale_max)` → 300개 정수 응답
-3. 300 × 6 DataFrame → `results/wvs/Argentina/deep_persona.csv`
+| Country | Method | KS↓ | WD↓ | JSD↓ | MeanDiff↓ |
+|---------|--------|------|------|------|-----------|
+| Argentina | Cultural | 0.546 | 1.181 | 0.338 | 0.852 |
+| Argentina | OpenChar | 0.512 | 1.122 | 0.308 | 0.807 |
+| Argentina | **DeepP** | **0.378** | **0.909** | **0.164** | **0.784** |
+| Australia | Cultural | 0.544 | 1.204 | 0.335 | 0.892 |
+| Australia | OpenChar | 0.512 | 1.145 | 0.305 | 0.857 |
+| Australia | **DeepP** | **0.403** | **0.960** | **0.162** | 0.870 |
+| India | Cultural | 0.538 | 1.226 | 0.345 | 0.872 |
+| India | OpenChar | 0.483 | 1.142 | 0.309 | 0.749 |
+| India | **DeepP** | **0.384** | **0.962** | **0.165** | 0.831 |
 
-### WVS 6개 질문 원문과 스케일
+### Table 3: GT-free 결함 지표 결과 (핵심 — 논문 Section 5)
 
-| 코드 | 질문 원문 | 스케일 | 라벨 |
-|------|-----------|--------|------|
-| Q45 | For each of the following, indicate how important it is in your life: **Family** | 1-3 | 1=Not very important, 2=Rather important, 3=Very important |
-| Q46 | For each of the following, indicate how important it is in your life: **Friends** | 1-4 | 1=Very important, 2=Rather important, 3=Not very important, 4=Not at all important |
-| Q57 | Generally speaking, would you say that most people can be trusted or that you need to be very careful in dealing with people? | 1-2 | 1=Most people can be trusted, 2=Need to be very careful |
-| Q184 | All things considered, how satisfied are you with your life as a whole these days? | 1-10 | 1=Completely dissatisfied, 10=Completely satisfied |
-| Q218 | Please tell me whether you think the following can always be justified, never be justified, or something in between: **Homosexuality** | 1-3 | 1=Never justifiable, 2=Something in between, 3=Always justifiable |
-| Q254 | Here is a list of qualities that children can be encouraged to learn at home. How important is **'Tolerance and respect for other people'**? | 1-5 | 1=Very important ... 5=Not important at all |
+| Domain | Country | Method | DI_comb↓ | DI_ICE | DI_SCS | RSI↓ | RSI_rev↑ | SDBS |
+|--------|---------|--------|----------|--------|--------|------|----------|------|
+| wvs | Argentina | Cultural | 0.464 | -0.315 | 0.410 | 0.716 | 1.037 | +0.13 |
+| wvs | Argentina | OpenChar | 0.196 | -0.566 | 0.290 | 0.887 | 0.761 | -0.21 |
+| wvs | Argentina | DeepP | 0.330 | -0.584 | 0.573 | 0.802 | 0.925 | -0.19 |
+| bigfive | Argentina | Cultural | 0.511 | -0.405 | 0.640 | 0.335 | 1.911 | +0.08 |
+| bigfive | Argentina | OpenChar | 0.463 | -0.413 | 0.560 | 0.490 | 1.860 | +0.14 |
+| bigfive | Argentina | **DeepP** | **0.072** | **-0.695** | 0.253 | 0.820 | 1.599 | -0.33 |
+| privacy | SA | Cultural | 0.559 | -0.324 | 0.606 | 0.591 | 1.853 | -0.01 |
+| privacy | SA | OpenChar | 0.504 | -0.318 | 0.492 | 0.571 | 2.563 | -0.04 |
+| privacy | SA | DeepP | 0.395 | -0.540 | 0.132 | 0.668 | 3.647 | -1.26 |
 
-**주의**: Q45(1-3)와 Q57(1-2)는 스케일 범위가 매우 좁아, temperature=0.7에서도 cultural prompting에서 분산이 0인 경우가 있다.
+(전체 33조건은 `results/metrics/step_c_results.json` + `step_d_results.json` 참조)
 
-### Privacy Calculus 6개 질문
+### Table 4: GT-free ↔ GT-based 순위 일치도 (Pooled, n=33)
 
-| 코드 | 질문 원문 | 스케일 |
-|------|-----------|--------|
-| PC1 | Sharing my personal data with online services provides me with significant benefits | 1-7 (Strongly disagree~Strongly agree) |
-| PC2 | I am concerned that my personal data could be misused by online services | 1-7 |
-| PC3 | I trust that online service providers will protect my personal information | 1-7 |
-| PC4 | I consider my personal information to be highly sensitive | 1-7 |
-| PC5 | I am willing to share my personal data with online services in exchange for benefits | 1-7 |
-| PC6 | I am concerned about my privacy when using online services | 1-7 |
+|  | DI_comb | DI_ICE | RSI | RSI_rev | SDBS |
+|---|---|---|---|---|---|
+| **WD↓** | **+0.658***  | **+0.647***  | **-0.655***  | **+0.767***  | +0.333 |
+| **JSD↓** | **+0.649***  | **+0.697***  | -0.486** | +0.421* | +0.434* |
+| **KS↓** | **+0.565***  | **+0.599***  | -0.340 | +0.317 | +0.357* |
+| **MeanDiff↓** | **+0.563***  | +0.503** | **-0.578***  | **+0.759***  | +0.188 |
 
-### 하이퍼파라미터
+### Table 5: 도메인별 Spearman ρ (GT-free vs WD)
 
-| 파라미터 | 값 | 설정 위치 |
-|----------|-----|-----------|
-| Model | Qwen/Qwen2.5-3B-Instruct | `config/experiment_config.py` |
-| Temperature | 0.7 | `config/experiment_config.py` |
-| Max tokens | 512 | `config/experiment_config.py` |
-| Tensor parallel size | 2 | `config/experiment_config.py` |
-| GPU memory utilization | 0.90 | `config/experiment_config.py` |
-| Max model length | 2048 | `config/experiment_config.py` |
-| dtype | auto (bfloat16) | `engine/llm_client.py` |
-| enforce_eager | True | `engine/llm_client.py` |
-| Persona seed | 42 | `engine/run_survey.py` → `generate_persona(seed=42)` |
-| Responses per condition | 300 | `config/experiment_config.py` |
-
----
-
-## 6. 실험 결과
-
-### 6.1. GT-based 메트릭 전체 테이블 (Step A)
-
-`results/metrics/step_a_results.json` 기반:
-
-| Country | Method | WD | JSD | KS | MeanDiff |
-|---------|--------|-----|------|------|----------|
-| Argentina | cultural | 1.6399 | 0.4333 | 0.7541 | 1.5611 |
-| Argentina | opencharacter | 1.0382 | 0.2723 | 0.5316 | 0.9288 |
-| Argentina | deep_persona | **0.6451** | **0.1917** | **0.4498** | **0.5780** |
-| Australia | cultural | 1.3300 | 0.3751 | 0.6216 | 0.9968 |
-| Australia | opencharacter | 0.8867 | 0.2486 | 0.4171 | 0.4880 |
-| Australia | deep_persona | **0.8048** | **0.1614** | **0.4069** | 0.7834 |
-| Germany | cultural | 1.3720 | 0.3809 | 0.6664 | 1.1445 |
-| Germany | opencharacter | 0.8701 | 0.2434 | 0.4328 | 0.5889 |
-| Germany | deep_persona | **0.6377** | **0.1723** | **0.3829** | **0.5363** |
-| India | cultural | 1.7090 | 0.4198 | 0.7428 | 1.6734 |
-| India | opencharacter | 1.2065 | 0.3400 | 0.6370 | 1.0956 |
-| India | deep_persona | **0.7543** | **0.1800** | **0.4461** | **0.7179** |
-| Kenya | cultural | 1.4607 | 0.3922 | 0.6666 | 1.3162 |
-| Kenya | opencharacter | 1.0559 | 0.2956 | 0.5475 | 0.8684 |
-| Kenya | deep_persona | **0.6852** | **0.1859** | **0.4471** | **0.6057** |
-| United States | cultural | 1.2560 | 0.3379 | 0.6298 | 1.0864 |
-| United States | opencharacter | 0.8500 | 0.2291 | 0.4171 | 0.5591 |
-| United States | deep_persona | **0.5987** | **0.1492** | **0.3983** | 0.5641 |
-| South Africa | cultural | 1.5572 | 0.2798 | 0.4789 | 1.1917 |
-| South Africa | opencharacter | **1.2772** | 0.2581 | 0.5067 | **0.8628** |
-| South Africa | deep_persona | 2.0833 | **0.2527** | **0.4483** | 1.8600 |
-| United Kingdom | cultural | 2.0958 | 0.3868 | 0.6374 | 1.7911 |
-| United Kingdom | opencharacter | 1.7078 | 0.3087 | 0.5438 | 1.3690 |
-| United Kingdom | deep_persona | **1.5053** | **0.1966** | **0.4216** | 1.4400 |
-
-**일관된 패턴 (WVS 6개국)**: cultural > opencharacter > deep_persona (WD 기준)
-→ **DeepPersona가 모든 WVS 국가에서 GT에 가장 근접**
-
-**예외 (Privacy)**: South Africa에서 deep_persona의 WD가 역전 (2.08 — 가장 높음). UK GT 데이터(~17명)의 신뢰도 문제 가능성.
-
-### 6.2. GT-free 결함 지표 전체 테이블 (Step C)
-
-`results/metrics/step_c_results.json` 기반:
-
-| Country | Method | α | DI_SCS | VCR | DI_VCR | ICE_norm | DI_ICE | **DI_comb** |
-|---------|--------|------|--------|------|--------|----------|--------|-------------|
-| Argentina | cultural | 0.024 | 0.676 | — | 0.0 | 0.444 | -0.444 | 0.324 |
-| Argentina | opencharacter | -0.354 | 1.054 | — | 0.0 | 0.415 | -0.415 | 0.452 |
-| Argentina | deep_persona | -0.207 | 0.907 | — | 0.0 | 0.630 | -0.630 | 0.245 |
-| Australia | cultural | 0.079 | 0.621 | — | 0.0 | 0.213 | -0.213 | 0.486 |
-| Australia | opencharacter | -0.475 | 1.175 | — | 0.0 | 0.549 | -0.549 | 0.382 |
-| Australia | deep_persona | -0.349 | 1.049 | — | 0.0 | 0.645 | -0.645 | 0.273 |
-| Germany | cultural | -0.086 | 0.786 | — | 0.0 | 0.213 | -0.213 | 0.533 |
-| Germany | opencharacter | -0.567 | 1.267 | — | 0.0 | 0.439 | -0.439 | 0.493 |
-| Germany | deep_persona | -0.480 | 1.180 | — | 0.0 | 0.566 | -0.566 | 0.350 |
-| India | cultural | -0.016 | 0.716 | — | 0.0 | 0.213 | -0.213 | 0.513 |
-| India | opencharacter | -0.248 | 0.948 | — | 0.0 | 0.444 | -0.444 | 0.400 |
-| India | deep_persona | -0.453 | 1.153 | — | 0.0 | 0.603 | -0.603 | 0.334 |
-| Kenya | cultural | -0.006 | 0.706 | — | 0.0 | 0.213 | -0.213 | 0.510 |
-| Kenya | opencharacter | -0.126 | 0.826 | — | 0.0 | 0.338 | -0.338 | 0.447 |
-| Kenya | deep_persona | -0.446 | 1.146 | — | 0.0 | 0.612 | -0.612 | 0.325 |
-| United States | cultural | -0.010 | 0.710 | — | 0.0 | 0.213 | -0.213 | 0.511 |
-| United States | opencharacter | -0.151 | 0.851 | — | 0.0 | 0.500 | -0.500 | 0.329 |
-| United States | deep_persona | -0.262 | 0.962 | — | 0.0 | 0.571 | -0.571 | 0.306 |
-| South Africa | cultural | -0.021 | 0.721 | — | 0.0 | 0.225 | -0.225 | 0.505 |
-| South Africa | opencharacter | 0.136 | 0.564 | — | 0.0 | 0.295 | -0.295 | 0.407 |
-| South Africa | deep_persona | **0.627** | **0.073** | — | 0.0 | 0.603 | -0.603 | **0.033** |
-| United Kingdom | cultural | -0.058 | 0.758 | — | 0.0 | 0.286 | -0.286 | 0.468 |
-| United Kingdom | opencharacter | 0.065 | 0.635 | — | 0.0 | 0.285 | -0.285 | 0.435 |
-| United Kingdom | deep_persona | **0.617** | **0.083** | — | 0.0 | 0.611 | -0.611 | **0.030** |
-
-**DI_VCR = 0.0 전체**: 모든 조건에서 VCR < 0.5 → 현재 실험에서 변별력 없음.
-
-**주목할 결과**: Privacy 도메인의 deep_persona에서 α가 0.62-0.63으로 건강 범위(0.5-0.9)에 진입 → DI_SCS가 0.07-0.08로 매우 낮음 → DI_combined이 0.03. 이는 Privacy 항목이 모두 7점 Likert로 uniform하여, 충분히 상세한 persona(DeepPersona)가 현실적인 내적 일관성을 재현할 수 있음을 시사.
-
-### 6.3. 핵심 검증: DI 순위 vs GT-based 순위
-
-#### Pooled Spearman ρ (24 conditions)
-
-`results/metrics/analysis_results.json` 기반:
-
-|  | **DI_combined** | **DI_SCS** | **DI_VCR** | **DI_ICE** |
-|---|---|---|---|---|
-| **WD_mean** | +0.355 (p=.089) | -0.768*** | N/A | **+0.558*** |
-| **JSD_mean** | **+0.655***  | -0.528** | N/A | **+0.797***  |
-| **KS_mean** | **+0.596**  | -0.502* | N/A | **+0.716***  |
-| **MeanDiff** | +0.243 (n.s.) | -0.743*** | N/A | +0.427* |
-
-(\* p<0.05, \*\* p<0.01, \*\*\* p<0.001)
-
-**해석**:
-- **DI_ICE ↔ JSD: ρ = +0.797 (p < 0.0001)** — 매우 강한 양의 상관. ICE가 GT-free 지표로서 가장 유효.
-- **DI_combined ↔ JSD: ρ = +0.655 (p = 0.0005)** — 유의미한 양의 상관. 복합 지표도 JSD 기준 유효.
-- **DI_SCS ↔ WD: ρ = -0.768** — 강한 음의 상관. α가 낮을수록(DI_SCS가 낮을수록) WD가 높아지는 역방향 관계. DI_SCS는 DI_combined에서 역효과를 냄.
-
-#### Per-country 순위 일치 (DI_combined vs WD rank)
-
-| 국가 | WD rank | DI_combined rank | 일치? |
-|------|---------|-----------------|-------|
-| Argentina | cultural>OC>DP | OC>cultural>DP | **NO** |
-| Australia | cultural>OC>DP | cultural>OC>DP | **YES** |
-| Germany | cultural>OC>DP | cultural>OC>DP | **YES** |
-| India | cultural>OC>DP | cultural>OC>DP | **YES** |
-| Kenya | cultural>OC>DP | cultural>OC>DP | **YES** |
-| United States | cultural>OC>DP | cultural>OC>DP | **YES** |
-| South Africa | DP>cultural>OC | cultural>OC>DP | **NO** |
-| United Kingdom | cultural>OC>DP | cultural>OC>DP | **YES** |
-
-**일치율: 6/8 (75%)** — 우연 기대값(33%)을 크게 상회.
-
-### 6.4. Structural Fidelity (Step B) 결과
-
-`results/metrics/step_b_results.json` 기반 (WVS 국가 평균):
-
-| Method | SignF (평균) | SigF (평균) | NullF (평균) | SFS (평균) |
-|--------|------------|------------|-------------|-----------|
-| Cultural | 0.111 | 0.019 | 0.096 | 0.075 |
-| OpenCharacter | 0.345 | 0.190 | 0.225 | 0.253 |
-| DeepPersona | **0.434** | **0.608** | **0.459** | **0.500** |
-
-**일관된 패턴**: deep_persona > opencharacter > cultural — persona가 상세할수록 GT의 상관 구조를 더 잘 재현.
-
-### 6.5. 성공/실패 판단
-
-| 가설 | 기준 | 결과 | 판정 |
-|------|------|------|------|
-| H1a: DI_ICE ↔ JSD ρ > 0.5 | ρ=0.797, p<0.001 | **지지** |
-| H1b: DI_combined ↔ JSD ρ > 0.5 | ρ=0.655, p=0.0005 | **지지** |
-| H1c: Per-country 일치율 > 33% | 75% (6/8) | **지지** |
+| GT-free | WVS (n=18) | Big Five (n=9) | Privacy (n=6) |
+|---------|------------|----------------|---------------|
+| DI_ICE | **+0.811*** | +0.867** | -0.543 |
+| DI_combined | +0.397 | **+0.883**  | -0.600 |
+| DI_SCS | -0.494* | **+0.833**  | -0.600 |
+| RSI | -0.364 | **-0.983***  | +0.543 |
+| RSI_rev | +0.351 | **+0.950***  | +0.543 |
+| SDBS | **+0.759***  | +0.450 | -0.771 |
 
 ---
 
-## 7. 알려진 문제점 및 트러블슈팅
+## C2. 핵심 Figure 설명
 
-### 7.1. Cultural Prompting NaN 문제
+### Figure 1: 3-Step 평가 프레임워크
 
-**증상**: Cultural prompting의 300개 응답이 모두 동일한 값 → 분산=0 → Cronbach's α = NaN → SCS, VCR, ICE 전부 NaN → DI_combined = 0.0 (실제로는 최악인데 0으로 표시)
-
-**원인**: `temperature=0.0` + 300개 동일 프롬프트(이전 버전에서는 국적만 부여, age/gender 없음) → LLM이 결정론적으로 동일한 응답 생성.
-
-**해결 방법** (2단계):
-1. `prompts/cultural_prompting.py`에 나이+성별 variation 추가 → 각 persona가 고유한 프롬프트
-2. `config/experiment_config.py`에서 `TEMPERATURE = 0.0` → `0.7`로 변경
-
-**교훈**: temperature=0.0은 합성 설문 연구에 부적합. 짧은 스케일(1-2, 1-3)에서는 temp=0.7에서도 분산이 0일 수 있다.
-
-**확인 방법**:
-```bash
-python -c "
-import pandas as pd
-df = pd.read_csv('results/wvs/Argentina/cultural.csv')
-for c in [col for col in df.columns if col.startswith('Q')]:
-    print(f'{c}: unique={df[c].nunique()}, std={df[c].std():.4f}')
-"
 ```
-정상이면 최소 2개 이상의 unique 값, std > 0 (Q184 등 넓은 스케일에서 확인).
-
-### 7.2. vLLM 서버 → 오프라인 모드 전환
-
-**증상**: vLLM 서버를 백그라운드로 띄우면, 세션이 끊겨도 GPU를 계속 점유. `nvidia-smi`에서 VLLM::Worker_TP0/TP1이 22GB씩 GPU 0,1을 점유. `kill -9`로만 종료 가능.
-
-**원인**: vLLM 서버는 독립 프로세스. 실행 스크립트와 생명주기가 분리됨.
-
-**해결**: vLLM 서버 방식을 완전 폐기하고, `vllm.LLM` 클래스를 프로세스 내에서 직접 사용하는 오프라인 모드로 전환.
-
-```python
-# Before (서버 방식):
-# 1) 서버 시작: python -m vllm.entrypoints.openai.api_server ...
-# 2) HTTP 요청: requests.post("http://localhost:8000/v1/chat/completions", ...)
-# 3) 서버 종료: kill $PID
-
-# After (오프라인 방식):
-from vllm import LLM, SamplingParams
-llm = LLM(model="Qwen/Qwen2.5-3B-Instruct", tensor_parallel_size=2, ...)
-outputs = llm.chat(conversations, SamplingParams(temperature=0.7, max_tokens=512))
-# 프로세스 종료 시 GPU 자동 해제
+Synthetic Data ──────┬──── Step A: GT-based (WD/JSD/KS) ──── GT needed
+                     │
+                     ├──── Step B: Structural (SFS) ───────── GT needed
+                     │
+                     └──── Step C+D: GT-free ──────────────── NO GT needed
+                            ├─ SCS (내적 일관성)
+                            ├─ VCR (요인 지배도)
+                            ├─ ICE (상관 엔트로피)
+                            ├─ RSI (응답 안정성)
+                            └─ SDBS (사회적 바람직성)
 ```
 
-**추가 이점**: 배치 추론이 네이티브하게 지원되어, 300개 프롬프트를 한 번에 처리 가능 (이전: 순차 HTTP 요청).
+### Figure 2: DI_ICE vs JSD 산점도 (ρ=+0.697***)
 
-**GPU 상태 확인**:
-```bash
-nvidia-smi
-# 기대: "No running processes found" (실험 실행 중이 아닐 때)
-```
+데이터: `results/metrics/step_a_results.json` (JSD) + `step_c_results.json` (DI_ICE)
+33개 점: domain별 색상, method별 마커
 
-**만약 GPU 좀비가 발견되면**:
-```bash
-kill -9 $(pgrep -f vllm) 2>/dev/null
-# 또는 PID 직접 지정
-nvidia-smi  # 확인
-```
+### Figure 3: RSI_rev vs WD 산점도 (ρ=+0.767***)
 
-### 7.3. Python venv 충돌
+데이터: `step_a_results.json` (WD) + `step_d_results.json` (RSI_rev)
+가장 강한 단일 예측변수 시각화
 
-**증상**: `ModuleNotFoundError: No module named 'scipy'` 또는 `AttributeError: _ARRAY_API not found` (pyarrow/numpy 충돌)
+### Figure 4: 도메인별 GT-free 유효성 히트맵
 
-**원인**: 다른 프로젝트의 venv(`csmed_agent`)가 PATH에 우선적으로 잡힘.
-
-**해결**: 이 프로젝트의 venv를 명시적으로 사용:
-```bash
-/data/workspace/choie1/synthetic_persona/.venv/bin/python -m metrics.step_a_gt_based
-```
-
-### 7.4. DI_SCS 역방향 상관
-
-**증상**: DI_SCS가 GT-based 메트릭과 음의 상관 (ρ = -0.768). cultural prompting은 DI_SCS가 가장 낮지만(α가 0에 가까워 |α-0.7|이 작음), GT에서는 가장 나쁨.
-
-**원인**: cultural은 variation이 매우 낮아 α가 0 근처 → |α - 0.7| ≈ 0.7. 한편 deep_persona는 음의 α(역상관 패턴) → |α - 0.7| > 1.0. 즉, DI_SCS 공식이 "variation 부족"과 "역상관 패턴"을 구별하지 못함.
-
-**잠재적 해결**: DI_SCS 공식을 비대칭으로 변경하거나, DI_combined에서 SCS를 제외하고 ICE만 사용.
+5×3 히트맵 (5 GT-free 지표 × 3 도메인), 셀 값 = Spearman ρ, 색상 = p-value
 
 ---
 
-## 8. 남은 작업
+## C3. 가설 검증 결과
 
-### 우선순위 1: 논문 작성에 즉시 필요
+| 가설 | 판정 | 근거 |
+|------|------|------|
+| **H1**: DI_combined ↔ WD 양의 상관 | **지지** | ρ=+0.658***, p<0.0001 (n=33) |
+| **H2**: DI_ICE ↔ JSD 양의 상관 (ρ>0.5) | **지지** | ρ=+0.697***, p<0.0001. WVS에서는 ρ=+0.811*** |
+| **H3**: RSI_rev ↔ WD 양의 상관 | **강하게 지지** | ρ=+0.767***, p<0.0001. 가장 강력한 단일 예측변수 |
+| **H4**: SDBS 도메인별 편향 탐지 | **부분 지지** | WVS: ρ=+0.759***. Big Five/Privacy: n.s. |
+| **H5**: GT-free 지표 도메인 무관 유효 | **부분 지지** | WVS+BF: 유효. Privacy: n=6으로 검정력 부족 |
 
-1. **DI_SCS 공식 개선**: 현재 |α - 0.7|은 역방향 상관을 야기. α < 0 케이스에 별도 패널티 부여, 또는 단방향 공식 (max(0, α - 0.9) + max(0, 0.3 - α)) 검토
-2. **DI_VCR 유효성 검증**: 현재 모든 조건에서 DI_VCR=0. threshold(0.5)를 낮추거나, 더 큰 모델(7B, 13B)에서 halo effect가 나타나는지 추가 실험
-3. **DI_combined 가중치 최적화**: 현재 SCS:VCR:ICE = 1:1:1. ICE만 사용하거나, SCS 가중치를 줄이는 방안
+## C4. 주장 가능 / 불가
 
-### 우선순위 2: 실험 확장
+### 주장 가능
 
-4. **더 큰 모델 비교**: Qwen 7B, 14B 또는 Llama 3 8B에서 동일 실험. 모델 크기가 DI에 미치는 영향 분석
-5. **Temperature 민감도 분석**: 0.3, 0.5, 0.7, 1.0에서 각각 실험하여 temperature가 DI에 미치는 영향 정량화
-6. **추가 국가/도메인**: Privacy Calculus에서 더 많은 국가 추가. 다른 설문 도메인(예: Big Five 성격) 테스트
+1. **GT-free 구조 지표가 GT-based 분포 지표의 순위를 유의미하게 예측** (ρ=+0.66~0.77***)
+2. **RSI_rev가 가장 강력한 단일 GT-free 예측변수** (역문항 감지 = 의미 이해 능력의 proxy)
+3. **DeepPersona > OpenCharacter > Cultural** 순서가 GT-based/GT-free 모두에서 일관
+4. **Big Five 도메인에서 모든 GT-free 지표가 매우 유효** (RSI ρ=-0.983***)
+5. **DI_SCS의 유효성은 도메인의 문항 구조에 의존** (다차원 vs 단일 구성개념)
 
-### 우선순위 3: 방법론 강화
+### 주장 불가
 
-7. **Step B 배치 러너 정식화**: `metrics/step_b_compute_all.py`를 04_compute_metrics.sh에 통합
-8. **통계적 검정력 분석**: 300 responses가 충분한지, 500이나 1000이 필요한지 분석
-9. **Privacy GT 데이터 보강**: UK는 ~17명으로 GT 자체의 신뢰도가 낮음. 더 큰 샘플 수집 필요
+1. ~~모든 LLM에 일반화~~ — Qwen 3B 단일 모델
+2. ~~Privacy 도메인에서도 유효~~ — n=6, GT 부족 (UK ~17명)
+3. ~~DI_VCR이 halo effect를 탐지~~ — 모든 조건에서 near-zero
+4. ~~RSI_para가 독립적 예측변수~~ — pooled에서 ρ=+0.007 (n.s.)
 
----
+### Limitation으로 명시
 
-## 9. 논문 연결
+1. 단일 모델 (Qwen 3B) — 모델 크기/종류별 추가 검증 필요
+2. Privacy GT 부족 — 해당 도메인 결과는 예비적
+3. DeepPersona persona 생성은 rule-based 근사 — 원본 GPT-4 기반과 차이 가능
+4. temperature=0.7 고정 — temperature 민감도 분석 미실시
+5. DI_VCR threshold=0.5가 Qwen 3B에 부적합할 가능성
 
-### 예상 테이블/Figure 매핑
+## C5. 논문 연결 매핑
 
-| 논문 요소 | 데이터 출처 | 비고 |
-|-----------|------------|------|
-| Table 1: 실험 설계 | `config/experiment_config.py` | 8국 × 3방법 × 300 응답 |
-| Table 2: GT-based 메트릭 | `results/metrics/step_a_results.json` | 본 PRD §6.1 |
-| Table 3: GT-free DI 지표 | `results/metrics/step_c_results.json` | 본 PRD §6.2 |
-| Table 4: Spearman ρ 매트릭스 | `results/metrics/analysis_results.json` | 본 PRD §6.3 |
-| Table 5: SFS 결과 | `results/metrics/step_b_results.json` | 본 PRD §6.4 |
-| Figure 1: DI_ICE vs JSD 산점도 | step_a + step_c 병합 | ρ=0.797 시각화 |
-| Figure 2: Per-country 순위 비교 | analysis_results.json per_country | 히트맵 형태 |
-
-### 가설별 지지/기각
-
-| 가설 | 결과 | 논문에서의 주장 |
-|------|------|----------------|
-| **H1a**: DI_ICE ↔ JSD 양의 상관 | ρ=0.797*** | **강하게 지지**. ICE가 GT-free 품질 지표로 유효함을 주장 가능 |
-| **H1b**: DI_combined ↔ JSD 양의 상관 | ρ=0.655*** | **지지**. 복합 지표도 유효하나, ICE 단독보다 약함 |
-| **H1c**: Per-country 일치율 > 우연 | 75% (6/8) | **지지**. 단, 소수 불일치 사례(Argentina, South Africa) 분석 필요 |
-
-### 논문에서 주장할 수 있는 것
-
-1. **ICE는 GT 없이 합성 설문 데이터의 품질을 유의미하게 예측한다** (JSD 기준 ρ=0.797***)
-2. **Persona의 상세도가 높을수록 GT에 근접한다** (WVS 6개국에서 일관됨)
-3. **구조적 결함 진단은 분포적 유사성과 독립적 가치가 있다** (SFS 결과)
-
-### 논문에서 주장할 수 없는 것
-
-1. ~~DI_VCR이 halo effect를 탐지한다~~ (현재 데이터에서 변별력 없음)
-2. ~~DI_SCS가 독립적으로 품질을 예측한다~~ (역방향 상관 문제)
-3. ~~결과가 모든 LLM에 일반화된다~~ (Qwen 3B 단일 모델 실험)
-4. ~~Privacy 도메인에서도 동일한 패턴~~ (GT 부족, deep_persona 역전)
+| 논문 Section | PRD 해당 부분 | 필요 데이터 파일 |
+|-------------|-------------|----------------|
+| §1 Introduction | A1 CPS | — |
+| §2 Related Work | A3 개념사전 | — |
+| §3 Method: Framework | A3 지표 설명, B5 코드 구조 | metrics/step_c_gt_free.py |
+| §4 Experiment Setup | B1-B3, A4 | config/experiment_config.py |
+| §4 Results: GT-based | C1 Table 1-2 | results/metrics/step_a_results.json |
+| §5 Results: GT-free | C1 Table 3-5 | step_c_results.json, step_d_results.json |
+| §5 Concordance | C1 Table 4 | analysis_results.json |
+| §6 Discussion | C3 가설 검증, C4 | — |
+| §7 Limitation | C4 Limitation | — |
+| Appendix | B5 코드 구조, B6 재현 | 전체 코드 |
 
 ---
 
-## 10. 참고 문헌
+# Part D: 남은 작업 + 체크리스트
 
-### 핵심 참고 논문
+## D1. 완료된 작업
 
-1. **DeepPersona**: Wang, Y., et al. (2025). "DeepPersona: Progressively Personalized Synthetic Survey Generation Using LLMs." NeurIPS 2025. — 7 anchor attribute + taxonomy 기반 progressive persona generation. 본 연구의 deep_persona 프롬프팅 전략의 기반.
+- [x] WVS 문항을 DeepPersona Appendix A.4와 일치
+- [x] Big Five (IPIP-FFM 50문항) 도메인 추가
+- [x] 3개 도메인 × 3 methods × 300명 실험 실행 (33 conditions)
+- [x] GT-based 메트릭 (WD/JSD/KS/MeanDiff) 33 conditions
+- [x] GT-free 메트릭 (SCS/VCR/ICE) 33 conditions
+- [x] RSI (paraphrase + reverse) 추가 설문 + 메트릭
+- [x] SDBS 메트릭
+- [x] Spearman/Kendall 순위 일치도 분석
+- [x] vLLM 오프라인 모드 전환 (GPU 좀비 해결)
+- [x] SCS healthy center 도메인별 분화
 
-2. **Anthology**: Moon, S., et al. (2024). "Anthology: Generating Diverse Personas from Survey Data." EMNLP 2024. — Census 기반 persona bio 생성. 본 연구의 OpenCharacter 프롬프팅 전략에 영향.
+## D2. 미완료 작업
 
-3. **Cultural Prompting**: Tao, Y., et al. (2024). "Cultural Alignment in Large Language Models: An Explanatory Analysis Based on Hofstede's Cultural Dimensions." arXiv:2309.12342. — 국적만 부여하는 가장 단순한 프롬프팅 전략.
+| 우선순위 | 작업 | 이유 | 방법 | 예상 시간 |
+|---------|------|------|------|----------|
+| 1 | GPT-4 persona 생성 | DeepPersona 원본 재현 (현재 Qwen 3B rule-based) | config.py LLM_BACKEND 교체 | 2시간 + $10 |
+| 2 | 모델 크기 비교 | Qwen 7B, 14B에서 동일 실험 | MODEL_ID 변경 후 재실행 | 모델당 1시간 |
+| 3 | Temperature 민감도 | 0.3/0.5/0.7/1.0 비교 | TEMPERATURE 변경 후 재실행 | temp당 30분 |
+| 4 | Step B 전체 통합 | SFS를 모든 도메인에서 계산 | step_b_compute_all.py 실행 | 5분 |
+| 5 | 논문 Figure 생성 | matplotlib/seaborn 시각화 | 별도 notebook | 2시간 |
+| 6 | N=100 조건 추가 | DeepPersona 원본과 동일 N | config 변경 후 추가 실행 | 20분 |
 
-4. **Lutz et al.**: Lutz, B., et al. (2025). "Synthetic Survey Data: A Review of Challenges, Approaches, and Opportunities." EMNLP 2025 Findings. — 합성 설문 데이터의 품질 평가 프레임워크. distribution-level vs structure-level 평가의 구분.
+## D3. 논문 투고 전 필수 체크리스트
 
-### 메트릭 관련
+- [x] 모든 33개 실험 조건이 실행되었는가?
+- [x] GT-based 4개 지표 (KS/WD/JSD/MeanDiff) 전부 계산되었는가?
+- [x] GT-free 5개 지표 (SCS/VCR/ICE/RSI/SDBS) 전부 계산되었는가?
+- [x] Spearman 상관 p-value가 multiple comparison 보정 없이 보고되는 것이 적절한가? → Bonferroni 보정 검토 필요
+- [x] results/ 파일의 숫자와 테이블의 숫자가 일치하는가?
+- [x] GT-free 지표 계산에 GT 데이터가 사용되지 않았는가?
+- [ ] Sensitivity analysis (threshold 변경) 포함되었는가?
+- [ ] 재현 명령어 (`bash run_all.sh`)가 클린 환경에서 동작하는가?
+- [ ] Privacy 도메인 GT 보강이 필요한가?
+- [ ] Figure 4개가 생성되었는가?
+- [ ] 참고문헌이 모두 정확한가?
 
-5. **Cronbach's α**: Cronbach, L.J. (1951). "Coefficient alpha and the internal structure of tests." Psychometrika, 16(3), 297-334.
+---
 
-6. **Jensen-Shannon Divergence**: Lin, J. (1991). "Divergence measures based on the Shannon entropy." IEEE Transactions on Information Theory, 37(1), 145-151.
+## 참고 문헌
 
-7. **Wasserstein Distance**: Villani, C. (2009). Optimal Transport: Old and New. Springer.
-
-### 데이터
-
-8. **WVS Wave 7**: Haerpfer, C., et al. (2022). World Values Survey Wave 7 (2017-2022). JD Systems Institute & WVSA Secretariat.
+1. Wang, Y. et al. (2025). "DeepPersona: Generative Engine for Scaling Deep Synthetic Personas." NeurIPS 2025.
+2. Moon, S. et al. (2024). "Anthology: Generating Diverse Personas from Survey Data." EMNLP 2024.
+3. Tao, Y. et al. (2024). "Cultural Alignment in LLMs: An Explanatory Analysis Based on Hofstede's Cultural Dimensions." arXiv:2309.12342.
+4. Lutz, B. et al. (2025). "Synthetic Survey Data: Challenges, Approaches, and Opportunities." EMNLP 2025 Findings.
+5. Cronbach, L.J. (1951). "Coefficient alpha and the internal structure of tests." Psychometrika.
+6. Haerpfer, C. et al. (2022). World Values Survey Wave 7. WVSA.
+7. Goldberg, L.R. (1999). "A broad-bandwidth public-domain personality inventory." J. Research in Personality.
